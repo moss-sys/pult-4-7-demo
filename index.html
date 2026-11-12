@@ -383,7 +383,7 @@ function buildRoute(L, behavior, T1, now){
   const others=MANAGERS.filter(m=>m.id!==L.assigned&&m.id!=='zhul');
   const push=(t,k,text)=>ev.push({t,k,text});
   push(c,'created','Клиент оставил имя и телефон, заявка создана из диалога');
-  if(as) push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru», закреплена за <b>${as.short}</b>. ${T1} мин взять может только она`);
+  if(as) push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru», закреплена за <b>${as.short}</b>, первые ${T1} мин взять может только она`);
   else push(addMin(c,.1),'sent','Отправлена в группу «Заявки 4-7.ru». У раздела нет закреплённого менеджера, заявка сразу открыта всем');
   let status='waiting', takenBy=null, takenAt=null, react=null, viaOpen=false;
   const take=(t,m,from)=>{if(t<=now){push(t,'taken',`<b>${m.short}</b> нажала «Беру». Остальные видят, что клиент занят`);status='taken';takenBy=m.id;takenAt=t;react=minsBetween(from,t);return true}return false};
@@ -597,7 +597,10 @@ for(const d of DIALOGS){
   d.status = d.lead ? 'lead' : live ? 'ai' : 'done';
   d.costRub = Math.round(between(18,55));
 }
-const LEADS=DIALOGS.filter(d=>d.lead).map(d=>d.lead).sort((a,b)=>b.createdAt-a.createdAt);
+const LEADS=DIALOGS.filter(d=>d.lead).map(d=>d.lead).sort((a,b)=>a.createdAt-b.createdAt);
+// номера заявок по порядку создания (генерировались в случайном порядке)
+LEADS.forEach((l,i)=>{const old=l.no, nw=1031+i; l.no=nw; for(const m of DIALOGS.find(d=>d.id===l.dialog).msgs) if(m.text) m.text=m.text.replace('№'+old,'№'+nw);});
+LEADS.reverse();
 const DBY=Object.fromEntries(DIALOGS.map(d=>[d.id,d]));
 const REASON={cta:'Клиент оставил контакт',stock:'Не хватает остатка',order:'Товар под заказ',section:'Раздел на менеджера',large:'Крупный объём'};
 const LSTATUS={waiting:['Ждёт закреплённого','b-attn'],open:['Открыта всем','b-attn'],taken:['Взята','b-done'],nottaken:['Не взята','b-err']};
@@ -609,7 +612,7 @@ try{const saved=JSON.parse(localStorage.getItem('pult47')||'{}'); if(saved.dsub)
 
 /* ================= РЕНДЕР: общие куски ================= */
 const $main=document.getElementById('main');
-function top(title,sub,right=''){const s=addMin(NOW,-6*1440);return `<div class="top"><div><h1>${title}</h1><p>${sub}</p></div><div class="top-r">${right}<span class="chip">7 дней · ${s.getDate()}-${NOW.getDate()} ${MON[NOW.getMonth()]}</span><span class="chip demo">Демо-данные</span></div></div>`}
+function pageTop(title,sub,right=''){const s=addMin(NOW,-6*1440);return `<div class="top"><div><h1>${title}</h1><p>${sub}</p></div><div class="top-r">${right}<span class="chip">7 дней · ${s.getDate()}-${NOW.getDate()} ${MON[NOW.getMonth()]}</span><span class="chip demo">Демо-данные</span></div></div>`}
 function statusBadge(d){
   if(d.status==='ai') return '<span class="badge b-ai"><span class="dot"></span>ИИ ведёт</span>';
   if(d.status==='lead'){const [t,c]=LSTATUS[d.lead.status];return `<span class="badge b-lead">Заявка №${d.lead.no}</span><span class="badge ${c}">${t}</span>`}
@@ -634,7 +637,7 @@ function renderDialogs(){
   const d=DBY[S.dId];
   const secsUsed=[...new Set(DIALOGS.map(x=>x.sec))].sort();
   const cnt=k=>DIALOGS.filter(x=>k==='all'||x.status===k).length;
-  let html=top('Диалоги','Вся переписка ИИ-менеджера с посетителями сайта: что спросили, что посчитал бот и когда передал заявку менеджеру.');
+  let html=pageTop('Диалоги','Вся переписка ИИ-менеджера с посетителями сайта: что спросили, что посчитал бот и когда передал заявку менеджеру.');
   html+=`<div class="subnav" role="tablist"><button role="tab" data-dsub="messages" aria-selected="${S.dsub==='messages'}">Сообщения</button><button role="tab" data-dsub="queue" aria-selected="${S.dsub==='queue'}">Очередь ${queue.length?`<span class="badge b-attn">${queue.length}</span>`:''}</button></div>`;
   if(S.dsub==='queue'){ html+=renderQueue(queue); $main.innerHTML=html; return; }
   html+=`<div class="dlg" data-mobile="${S.mobile}">
@@ -736,7 +739,7 @@ function renderLeads(){
   const taken=LEADS.filter(l=>l.status==='taken'), byAs=taken.filter(l=>l.takenBy===l.assigned&&!l.viaOpen);
   const reactW=taken.filter(l=>isWork(l.createdAt)); const avg=reactW.length?Math.round(reactW.reduce((s,l)=>s+l.react,0)/reactW.length):0;
   const c=k=>LEADS.filter(l=>k==='all'||l.status===k).length;
-  let h=top('Заявки в Telegram','Каждая заявка уходит в группу менеджеров: сначала закреплённому за разделом, через T1 открывается всем. Здесь видно, кому ушла, во сколько и кто взял.');
+  let h=pageTop('Заявки в Telegram','Каждая заявка уходит в группу менеджеров: сначала закреплённому за разделом, через T1 открывается всем. Здесь видно, кому ушла, во сколько и кто взял.');
   h+=`<div class="strip">
     <div class="stat"><span class="metric">Заявок за 7 дней</span><span class="v">${LEADS.length}</span><span class="s">из ${DIALOGS.length} диалогов</span></div>
     <div class="stat"><span class="metric">Взял закреплённый</span><span class="v">${Math.round(byAs.length/Math.max(1,taken.length)*100)}%</span><span class="s">${byAs.length} из ${taken.length} взятых</span></div>
@@ -773,7 +776,7 @@ function renderSim(){
   if(!SIM.L) simBuild();
   const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)];
   const s=SEC[SIM.sec];
-  let h=top('Проверка маршрута','Выберите раздел, время обращения и как поведут себя менеджеры. Бот проведёт тестовую заявку по правилам из КП и покажет, что увидит группа в Telegram.');
+  let h=pageTop('Проверка маршрута','Выберите раздел, время обращения и как поведут себя менеджеры. Бот проведёт тестовую заявку по правилам из КП и покажет, что увидит группа в Telegram.');
   h+=`<div class="sim"><section class="panel"><div class="panel-h"><h2>Условия</h2></div><form class="form" id="simForm">
     <div class="field"><label for="simSec">Раздел, откуда пришёл клиент</label><select id="simSec">${SECTIONS.map(x=>`<option value="${esc(x.c)}">${esc(secShort(x.c))}${x.m?'':' · без менеджера'}${x.h?' · сразу на менеджера':''}</option>`).join('')}</select>
       <span class="hint">Закреплён: ${s.m?MID[s.m].short:'никто, заявка сразу открыта всем'}${s.h?'. ИИ по разделу не консультирует.':''}</span></div>
@@ -808,7 +811,7 @@ function renderAnalytics(){
   const N=DIALOGS.length, withCalc=DIALOGS.filter(d=>d.msgs.some(m=>m.who==='calc')).length, leads=LEADS.length, taken=LEADS.filter(l=>l.status==='taken').length;
   const auto=DIALOGS.filter(d=>!d.lead).length, off=DIALOGS.filter(d=>!isWork(d.at)).length;
   const cost=DIALOGS.reduce((s,d)=>s+d.costRub,0);
-  let h=top('Аналитика','Сколько обращений закрыл ИИ, сколько стало заявками и как быстро менеджеры их забирают.');
+  let h=pageTop('Аналитика','Сколько обращений закрыл ИИ, сколько стало заявками и как быстро менеджеры их забирают.');
   h+=`<div class="kpis">
    <div class="kpi"><span class="metric">Диалогов</span><span class="v">${N}</span><span class="s">${DIALOGS.reduce((s,d)=>s+d.msgs.filter(m=>m.who==='client'||m.who==='bot').length,0)} сообщений</span></div>
    <div class="kpi"><span class="metric">ИИ ответил сам</span><span class="v">${Math.round(auto/N*100)}%</span><span class="s">${auto} без передачи менеджеру</span></div>
@@ -859,7 +862,7 @@ function topSections(){
 /* ================= МЕНЕДЖЕРЫ И ПРАВИЛА ================= */
 function renderRouting(){
   const none=SECTIONS.filter(s=>!s.m), hand=SECTIONS.filter(s=>s.h);
-  let h=top('Менеджеры и правила','Закрепление менеджеров за разделами взято с карточек товаров на 4-7.ru. Параметры с пометкой «уточнить» ждут подтверждения Андрея.');
+  let h=pageTop('Менеджеры и правила','Закрепление менеджеров за разделами взято с карточек товаров на 4-7.ru. Параметры с пометкой «уточнить» ждут подтверждения Андрея.');
   h+=`<div class="params">
    <div class="param"><span class="metric">Время на ответ закреплённому (T1)</span><span class="v">${T1_DEFAULT} мин</span><span class="s"><span class="badge b-attn">уточнить</span> после этого заявка открыта всем</span></div>
    <div class="param"><span class="metric">Рабочие часы</span><span class="v">${hoursText}</span><span class="s"><span class="badge b-attn">уточнить</span> на сайте два варианта режима склада</span></div>
