@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Пульт ИИ-менеджера 4-7.ru</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: оболочка AIUzel (левая навигация + рабочая область). Графит + один сигнальный синий; цвет = смысл:
+   lead=заявка, attn=нужен менеджер/ждёт, done=взята/завершено, err=не взята, info=демо/справка. */
+:root{
+  --bg:#ffffff; --surface:#f6f7f9; --surface-2:#f1f2f4; --line:#e6e8ec; --ink:#0b0b0c; --muted:#6b7280; --faint:#9ca3af;
+  --accent:#2563eb; --accent-soft:#eef2ff; --accent-ink:#1d4ed8;
+  --lead:#dce6fa; --lead-ink:#1e40af; --done:#d3efe6; --done-ink:#0f766e; --ok-ink:#15803d;
+  --attn:#fce9be; --attn-ink:#92400e; --err:#fce2e2; --err-ink:#b91c1c; --info:#eef1f5; --info-ink:#374151;
+  --navy:#111827; --on-navy:#ffffff;
+  --tg-bg:#e7ecf1; --tg-bubble:#ffffff; --tg-btn:#f3f6fa; --tg-name:#2563eb; --tg-svc:rgba(17,24,39,.55);
+  --font:"Inter","SF Pro Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --r-sm:6px; --r-md:8px; --r-lg:14px; --pill:50px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1014; --surface:#15181d; --surface-2:#1b1f26; --line:#272c35; --ink:#eceef2; --muted:#9aa3b0; --faint:#6b7280;
+  --accent:#6b93ff; --accent-soft:#1a2341; --accent-ink:#a9c0ff;
+  --lead:#1e2a47; --lead-ink:#a9c0ff; --done:#12302b; --done-ink:#5eead4; --ok-ink:#4ade80;
+  --attn:#3a2d10; --attn-ink:#fcd34d; --err:#3d1b1b; --err-ink:#fca5a5; --info:#1c2129; --info-ink:#cbd2dc;
+  --navy:#e9edf3; --on-navy:#0e1014;
+  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55);
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e1014; --surface:#15181d; --surface-2:#1b1f26; --line:#272c35; --ink:#eceef2; --muted:#9aa3b0; --faint:#6b7280;
+  --accent:#6b93ff; --accent-soft:#1a2341; --accent-ink:#a9c0ff;
+  --lead:#1e2a47; --lead-ink:#a9c0ff; --done:#12302b; --done-ink:#5eead4; --ok-ink:#4ade80;
+  --attn:#3a2d10; --attn-ink:#fcd34d; --err:#3d1b1b; --err-ink:#fca5a5; --info:#1c2129; --info-ink:#cbd2dc;
+  --navy:#e9edf3; --on-navy:#0e1014;
+  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55);
+  color-scheme:dark;}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent-ink)}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-size:12px}
+
+.app{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));gap:0}
+.side{border-right:1px solid var(--line);padding:18px 14px 18px 0;display:flex;flex-direction:column;gap:18px;position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:calc(100vh - env(safe-area-inset-top,0px))}
+.brand{display:flex;flex-direction:column;gap:2px;padding:0 8px}
+.brand b{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.brand span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;border:0;background:none;border-radius:var(--r-md);padding:8px 10px;text-align:left;color:var(--muted);font-weight:500}
+.nav button:hover{background:var(--surface);color:var(--ink)}
+.nav button[aria-current="page"]{background:var(--surface-2);color:var(--ink)}
+.nav svg{width:17px;height:17px;flex:none}
+.nav .cnt{margin-left:auto;font-size:11px;font-weight:600;background:var(--attn);color:var(--attn-ink);border-radius:var(--pill);padding:1px 7px}
+.side-foot{margin-top:auto;padding:0 8px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted)}
+
+.main{min-width:0;padding:18px 0 32px 24px;display:flex;flex-direction:column;gap:16px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top h1{margin:0;font-size:22px;font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13px;max-width:70ch}
+.top-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:var(--pill);padding:5px 11px;font-size:12px;font-weight:500;color:var(--muted);background:var(--bg);white-space:nowrap}
+.chip.demo{background:var(--info);border-color:transparent;color:var(--info-ink)}
+
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:var(--pill);padding:2px 8px;font-size:11.5px;font-weight:600;white-space:nowrap;line-height:1.5}
+.b-ai{background:var(--accent-soft);color:var(--accent-ink)}
+.b-lead{background:var(--lead);color:var(--lead-ink)}
+.b-attn{background:var(--attn);color:var(--attn-ink)}
+.b-done{background:var(--done);color:var(--done-ink)}
+.b-err{background:var(--err);color:var(--err-ink)}
+.b-info{background:var(--info);color:var(--info-ink)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+
+.subnav{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.subnav button{border:0;background:none;padding:8px 12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.subnav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+
+.panel{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);min-width:0}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.panel-h h2,.panel-h h3{margin:0;font-size:13px;font-weight:600}
+.eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+/* ---------- Диалоги ---------- */
+.dlg{display:grid;grid-template-columns:320px minmax(0,1fr) 290px;gap:12px;min-height:640px}
+.list{display:flex;flex-direction:column;min-height:0}
+.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px;border-bottom:1px solid var(--line)}
+.filters select,.filters input,.field select,.field input{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
+.filters .search{grid-column:1/-1}
+.rows{overflow:auto;max-height:720px}
+.row{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:10px 12px}
+.row:hover{background:var(--surface)}
+.row[aria-current="true"]{background:var(--accent-soft)}
+.row-t{display:flex;align-items:center;gap:6px;min-width:0}
+.row-t b{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-t .time{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.row p{margin:0;font-size:12.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row .tags{display:flex;gap:4px;flex-wrap:wrap}
+
+.chat{display:flex;flex-direction:column;min-height:0}
+.chat-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.chat-h .who{display:flex;flex-direction:column;gap:3px;min-width:0}
+.chat-h .who b{font-size:14px}
+.chat-h .who span{font-size:12px;color:var(--muted)}
+.msgs{display:flex;flex-direction:column;gap:10px;padding:14px;overflow:auto;max-height:720px;background:var(--surface)}
+.m{max-width:78%;display:flex;flex-direction:column;gap:3px}
+.m .bub{padding:9px 12px;border-radius:var(--r-lg);font-size:13.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+.m .meta{font-size:11px;color:var(--muted)}
+.m.client{align-self:flex-start}
+.m.client .bub{background:var(--bg);border:1px solid var(--line);border-top-left-radius:4px}
+.m.bot{align-self:flex-end;align-items:flex-end}
+.m.bot .bub{background:var(--accent-soft);border-top-right-radius:4px}
+.m.bot .meta{text-align:right}
+.ev{align-self:center;display:flex;align-items:center;gap:6px;font-size:12px;border-radius:var(--pill);padding:4px 10px;max-width:92%;text-align:center}
+.cards{display:grid;gap:6px;width:100%}
+.pcard{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:8px 10px;text-align:left}
+.pcard b{font-size:12.5px;font-weight:600}
+.pcard .pr{font-size:12.5px;font-weight:600;text-align:right}
+.pcard span{font-size:11.5px;color:var(--muted)}
+.calc{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:8px 10px;width:100%;font-size:12.5px}
+.calc .ct{font-weight:600;margin-bottom:4px}
+.calc dl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;margin:0}
+.calc dt{color:var(--muted)} .calc dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.calc .tot{border-top:1px solid var(--line);margin-top:4px;padding-top:4px;font-weight:600}
+.chat-f{padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+
+.info{display:flex;flex-direction:column}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;padding:12px 14px;font-size:12.5px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;text-align:right;overflow-wrap:anywhere}
+.sect{padding:12px 14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--pill);padding:7px 14px;font-weight:500;font-size:13px;border:1px solid var(--line);background:var(--bg)}
+.btn:hover{background:var(--surface)}
+.btn.primary{background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+.btn.primary:hover{opacity:.9;background:var(--navy)}
+.btn.ghost{border-color:transparent}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tl li{display:grid;grid-template-columns:44px 14px minmax(0,1fr);gap:8px;font-size:12.5px;padding-bottom:10px;position:relative}
+.tl li .tt{color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;font-size:12px;padding-top:1px}
+.tl li .pt{width:10px;height:10px;border-radius:50%;margin-top:4px;background:var(--faint);position:relative;z-index:1;border:2px solid var(--bg);box-sizing:content-box}
+.tl li:not(:last-child)::after{content:"";position:absolute;left:58px;top:12px;bottom:-2px;width:1px;background:var(--line)}
+.tl li.k-taken .pt{background:var(--done-ink)}
+.tl li.k-open .pt,.tl li.k-offhours .pt,.tl li.k-wait .pt{background:var(--attn-ink)}
+.tl li.k-nottaken .pt{background:var(--err-ink)}
+.tl li.k-sent .pt,.tl li.k-created .pt{background:var(--accent)}
+.tl li .tx b{font-weight:600}
+.tl li.future{opacity:.45}
+
+/* ---------- Заявки / Telegram ---------- */
+.leads{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:12px;align-items:start}
+.strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.stat{border:1px solid var(--line);border-radius:var(--r-lg);padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat .metric{font-size:12px;color:var(--muted);font-weight:500}
+.stat .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stat .s{font-size:11.5px;color:var(--muted)}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{text-align:left;font-weight:600;font-size:11.5px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.sel td{background:var(--accent-soft)}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--surface)}
+tbody tr.sel:hover td{background:var(--accent-soft)}
+td.r,th.r{text-align:right}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:var(--bg);border-radius:var(--pill);padding:4px 11px;font-size:12px;font-weight:500;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--on-navy)}
+
+.tg{background:var(--tg-bg);border-radius:var(--r-lg);display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line)}
+.tg-h{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border-bottom:1px solid var(--line)}
+.tg-av{width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--on-navy);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none}
+.tg-h b{display:block;font-size:13.5px}
+.tg-h span{font-size:11.5px;color:var(--muted)}
+.tg-body{display:flex;flex-direction:column;gap:8px;padding:12px;min-height:360px;max-height:640px;overflow:auto}
+.tg-msg{background:var(--tg-bubble);border-radius:12px;border-bottom-left-radius:4px;padding:8px 10px 6px;max-width:94%;align-self:flex-start;font-size:13px;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.tg-msg .nm{font-size:12px;font-weight:600;color:var(--tg-name);margin-bottom:2px}
+.tg-msg .tx{white-space:pre-wrap;overflow-wrap:anywhere}
+.tg-msg .tx b{font-weight:600}
+.tg-msg .tm{font-size:10.5px;color:var(--muted);text-align:right;margin-top:2px}
+.tg-msg.me{align-self:flex-end;border-bottom-left-radius:12px;border-bottom-right-radius:4px}
+.tg-kb{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
+.tg-kb span{background:var(--tg-btn);border-radius:8px;text-align:center;padding:6px;font-size:12.5px;font-weight:500;color:var(--tg-name)}
+.tg-kb span.off{color:var(--muted);text-decoration:line-through}
+.tg-svc{align-self:center;font-size:11.5px;background:var(--tg-svc);color:#fff;border-radius:var(--pill);padding:3px 10px;text-align:center;max-width:92%}
+:root[data-theme="dark"] .tg-svc{color:#0e1014}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tg-svc{color:#0e1014}}
+.tg-edit{font-size:10.5px;color:var(--muted)}
+
+/* ---------- Проверка маршрута ---------- */
+.sim{display:grid;grid-template-columns:320px minmax(0,1fr) 400px;gap:12px;align-items:start}
+.form{display:flex;flex-direction:column;gap:12px;padding:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label,.field .lbl{font-size:12.5px;font-weight:500}
+.field .hint{font-size:11.5px;color:var(--muted)}
+.radios{display:flex;flex-direction:column;gap:4px}
+.radios label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;font-weight:400;border:1px solid var(--line);border-radius:var(--r-md);padding:7px 9px;cursor:pointer}
+.radios label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.radios input{margin-top:2px;accent-color:var(--accent)}
+.clock{font-family:var(--mono);font-size:28px;font-weight:500;letter-spacing:-.02em}
+
+/* ---------- Аналитика ---------- */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.kpi{border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .metric{font-size:12px;color:var(--muted);font-weight:500}
+.kpi .v{font-size:26px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+.grid2b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.pb{padding:12px 14px}
+.funnel{display:flex;flex-direction:column;gap:9px}
+.fn{display:grid;grid-template-columns:150px minmax(0,1fr) 70px;gap:10px;align-items:center;font-size:12.5px}
+.fn .bar{height:22px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.fn .bar i{display:block;height:100%;border-radius:5px}
+.fn .val{text-align:right;font-variant-numeric:tabular-nums}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:10px;font-family:var(--font)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 14px 12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.hbar{display:grid;grid-template-columns:minmax(0,1fr) 120px 44px;gap:10px;align-items:center;font-size:12.5px;padding:5px 0}
+.hbar .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.hbar .bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+
+/* ---------- Маршрутизация ---------- */
+.cols2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start}
+.params{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.param{border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.param .metric{font-size:12px;color:var(--muted);font-weight:500}
+.param .v{font-size:15px;font-weight:600}
+.param .s{font-size:12px;color:var(--muted)}
+.mgr{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.mgr:first-child{border-top:0}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--surface-2);color:var(--ink)}
+.av.q{background:var(--attn);color:var(--attn-ink)}
+.mgr details summary{cursor:pointer;font-size:12px;color:var(--muted);list-style:none}
+.mgr details summary::-webkit-details-marker{display:none}
+.mgr ul{margin:6px 0 0;padding-left:16px;font-size:12px;color:var(--muted)}
+.qs{margin:0;padding:12px 14px 12px 32px;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.qs li b{font-weight:600}
+.rules td:first-child{font-weight:500}
+.note{font-size:12.5px;color:var(--muted);padding:10px 14px;border-top:1px solid var(--line)}
+.taglist{display:flex;gap:6px;flex-wrap:wrap;padding:12px 14px}
+
+.back{display:none}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+
+@media (max-width:1280px){
+  .dlg{grid-template-columns:300px minmax(0,1fr)}
+  .dlg .info{grid-column:1/-1}
+  .sim{grid-template-columns:300px minmax(0,1fr)}
+  .sim .tg{grid-column:1/-1}
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:1080px){
+  .leads{grid-template-columns:minmax(0,1fr)}
+  .strip{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid2,.grid2b,.cols2{grid-template-columns:minmax(0,1fr)}
+  .params{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 0;gap:10px}
+  .nav{flex-direction:row;overflow-x:auto;gap:4px}
+  .nav button{white-space:nowrap;padding:7px 10px}
+  .side-foot{display:none}
+  .main{padding:14px 0 28px}
+  .dlg{grid-template-columns:minmax(0,1fr);min-height:0}
+  .dlg[data-mobile="list"] .chat,.dlg[data-mobile="list"] .info{display:none}
+  .dlg[data-mobile="chat"] .list{display:none}
+  .back{display:inline-flex}
+  .sim{grid-template-columns:minmax(0,1fr)}
+  .m{max-width:92%}
+}
+@media (max-width:560px){
+  .kpis,.strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .params{grid-template-columns:minmax(0,1fr)}
+  .fn{grid-template-columns:110px minmax(0,1fr) 54px}
+  .hbar{grid-template-columns:minmax(0,1fr) 70px 36px}
+  .filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@keyframes pop{from{transform:translateY(4px);opacity:.3}to{transform:none;opacity:1}}
+.pop{animation:pop .25s ease-out}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>Четыре Седьмых</b><span>ИИ-менеджер · 4-7.ru</span></div>
+    <nav class="nav" id="nav" aria-label="Разделы">
+      <button data-route="dialogs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Диалоги</button>
+      <button data-route="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Заявки в Telegram<span class="cnt" id="navCnt" hidden></span></button>
+      <button data-route="route-test"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M6 16V9a4 4 0 0 1 4-4h5"/></svg>Проверка маршрута</button>
+      <button data-route="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>Аналитика</button>
+      <button data-route="routing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 5.5M18 14c2 .6 3 2.6 3 6"/></svg>Менеджеры и правила</button>
+    </nav>
+    <div class="side-foot">
+      <span class="chip demo">Демо-данные</span>
+      <span>Каталог, цены, остатки и закрепление менеджеров взяты с сайта и из 1С. Клиенты и переписка сгенерированы.</span>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* ================= ДАННЫЕ ================= */
+const NOW = new Date(2026,10,12,16,30);           // демо-«сейчас»: чт 12.11.2026 16:30
+const T1_DEFAULT = 15;                             // мин, у закреплённого менеджера (уточнить у клиента)
+const HOURS = {1:[9.5,18],2:[9.5,18],3:[9.5,18],4:[9.5,18],5:[9.5,18],6:[10,17],0:null}; // склад, уточнить
+
+const MANAGERS = [
+  {id:'per', name:'Перетятько Ольга Юрьевна', short:'Перетятько О. Ю.', io:'Ольга Юрьевна', dat:'Ольге Юрьевне', ini:'ОП'},
+  {id:'zhil',name:'Жиляева Ирина Юрьевна', short:'Жиляева И. Ю.', io:'Ирина Юрьевна', dat:'Ирине Юрьевне', ini:'ИЖ'},
+  {id:'bir', name:'Бирючева Анна Александровна', short:'Бирючева А. А.', io:'Анна Александровна', dat:'Анне Александровне', ini:'АБ'},
+  {id:'zhul',name:'Жулковская Евгения Юрьевна', short:'Жулковская Е. Ю.', io:'Евгения Юрьевна', dat:'Евгении Юрьевне', ini:'ЕЖ'},
+];
+const MBY = Object.fromEntries(MANAGERS.map(m=>[m.name,m]));
+const MID = Object.fromEntries(MANAGERS.map(m=>[m.id,m]));
+
+// Закрепление по разделам: спарсено с карточек 4-7.ru 12.11.2026 (блок «Звоните нашим менеджерам»)
+const SECTIONS = [["Камень для мощения Бордюрный камень","per",7,0],["Камень для мощения Брусчатка Колотая","bir",5,0],["Камень для мощения Брусчатка Пиленная из плитняка","per",18,0],["Камень для мощения Брусчатка Пилено-Колотая","per",10,0],["Камень для мощения Брусчатка Полнопиленная","per",29,0],["Камень для мощения Брусчатка Римская кладка",null,1,0],["Камень для мощения Брусчатка Состаренная","per",15,0],["Камень для мощения Ступени","per",15,0],["Камень для мощения Тротуарная плитка Из гранита","zhil",19,0],["Камень для мощения Тротуарная плитка Из песчаника","per",10,0],["Камень для мощения Уличный керамогранит",null,5,0],["Материалы для ЛД Геотекстиль","bir",6,0],["Материалы для ЛД Декоративная кора","zhil",2,0],["Материалы для ЛД Клеи и затирки для камня","zhil",11,1],["Материалы для ЛД Кортен сталь Арт-объекты","bir",11,1],["Материалы для ЛД Кортен сталь Листы кортеновской стали","bir",9,1],["Материалы для ЛД Кортен сталь Светильники из кортена","bir",8,1],["Материалы для ЛД Очистители и гидрофобизаторы","per",6,1],["Материалы для ЛД Пески","zhil",4,0],["Материалы для ЛД Садовые бордюры и ограничители мощения","zhil",14,0],["Облицовочная плитка","zhil",34,1],["Природный камень Булыжники и валуны","zhil",10,0],["Природный камень Бутовый камень","zhil",19,0],["Природный камень Галька Галька из песчаника и сланца","zhil",24,0],["Природный камень Галька Галька на сетке","zhil",8,1],["Природный камень Галька Массажные коврики из гальки","zhil",2,1],["Природный камень Галька Морская галька","zhil",7,0],["Природный камень Галька Мраморная галька","zhil",12,0],["Природный камень Галька Покрытие детских площадок «Страна Топ-топия»","zhul",3,0],["Природный камень Галька Речная галька","zhil",12,0],["Природный камень Глыбы и крупные валуны","bir",25,0],["Природный камень Декоративные щебни Декоративные крошки, пески и щебни","zhil",22,0],["Природный камень Декоративные щебни Мраморный щебень","zhil",6,0],["Природный камень Дикий камень","per",10,1],["Природный камень Кладочный камень","bir",14,0],["Природный камень Песчаник","zhil",13,0],["Природный камень Плитняки","per",22,0],["Природный камень Плиты для пошаговых дорожек Крупногабаритные","",8,0],["Природный камень Плиты для пошаговых дорожек Состаренные","per",8,0],["Природный камень Сланец","bir",9,0],["Фонтаны и МАФЫ Природные формы",null,1,1],["Фонтаны и МАФЫ Балансирующие камни","zhil",6,1],["Фонтаны и МАФЫ Заготовка под памятник","zhil",20,1],["Фонтаны и МАФЫ Каменные фонари (современные)",null,4,1],["Фонтаны и МАФЫ Японские классические фонари",null,8,1],["Фонтаны и МАФЫ Японские фонари Ямадоро",null,8,1],["Фонтаны и МАФЫ МАФы","bir",6,1],["Фонтаны и МАФЫ Очаги",null,7,1],["Фонтаны и МАФЫ Патио","per",8,1],["Фонтаны и МАФЫ Подставка для вина ART-VINE","zhil",21,1],["Фонтаны и МАФЫ Скамейки природные формы",null,10,1],["Фонтаны и МАФЫ Скамейки строгие формы",null,3,1],["Фонтаны и МАФЫ Столы",null,6,1],["Фонтаны и МАФЫ Фонтаны","bir",23,1],["Фонтаны и МАФЫ Эрклез","bir",11,1]]
+  .map(([c,m,n,h])=>({c, m:m||null, n, h:!!h}));
+const SEC = Object.fromEntries(SECTIONS.map(s=>[s.c,s]));
+function secShort(c){return c.replace(/^Природный камень /,'').replace(/^Камень для мощения /,'').replace(/^Материалы для ЛД /,'').replace(/^Фонтаны и МАФЫ /,'Фонтаны и МАФы · ').replace(/^Декоративные щебни /,'').replace(/^Галька /,'Галька · ')}
+
+// Товары для демо-сценариев: цены, пороги, коэффициенты и остатки из комплекта сборки 12.11
+const P = {
+  nubiec:{name:'Плитняк «Нубиец» из песчаника',fr:'30-40 мм',sec:'Природный камень Плитняки',m2t:13.535,pt:[[0,6,18800],[6,20,18303],[20,1e9,17307]],pm2:1389,stock:2.35,unit:'т'},
+  rost:{name:'Плитняк «Ростовский» из песчаника',fr:'30-40 мм',sec:'Природный камень Песчаник',m2t:13.323,pt:[[0,6,16800]],pm2:1261,stock:13.54,unit:'т'},
+  sahara:{name:'Плитняк «Сахара» из песчаника',fr:'30-40 мм',sec:'Природный камень Песчаник',m2t:13.013,pt:[[0,6,10710]],pm2:823,stock:0,unit:'т'},
+  kasp:{name:'Природная галька «Каспийская»',fr:'5-50 мм',sec:'Природный камень Галька Морская галька',m3t:0.6911,pt:[[0,6,21945],[6,20,20801],[20,1e9,18512]],stock:0.05,unit:'т'},
+  prince:{name:'Брусчатка «Черный принц» колотая',fr:'100×100×50 мм',sec:'Камень для мощения Брусчатка Колотая',pcsM2:82,pp:[[0,15000,58],[15000,1e9,56]],stock:11194,unit:'шт'},
+  marble:{name:'Крошка мраморная белая',fr:'5-10 мм',sec:'Природный камень Декоративные щебни Мраморный щебень',m3t:0.7803,pt:[[0,6,17500],[6,20,16938]],stock:49.88,unit:'т'},
+  granred:{name:'Крошка гранитная красная',fr:'5-10 мм',sec:'Природный камень Декоративные щебни Декоративные крошки, пески и щебни',pt:[[0,6,11590]],stock:0,unit:'т'},
+  volga:{name:'Постелистый бут «Волга» из песчаника',fr:'6-10 см',sec:'Природный камень Кладочный камень',pt:[[0,6,9660],[6,20,9237]],stock:0,unit:'т'},
+  boulder:{name:'Валун «Лесной»',fr:'900-1800 мм',sec:'Природный камень Глыбы и крупные валуны',pt:[[0,6,14200]],stock:4.63,unit:'т'},
+  irbis:{name:'Галька мраморная «Ирбис»',fr:'30-70 мм',sec:'Природный камень Галька Мраморная галька',pt:[[0,6,23130]],stock:0,unit:'т'},
+};
+const priceAt=(tiers,q)=>{for(const [a,b,p] of tiers) if(q>a-1e-9&&q<b) return p; return tiers[tiers.length-1][2]};
+
+/* ================= УТИЛИТЫ ================= */
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let R = rng(4707);
+const pick=a=>a[Math.floor(R()*a.length)];
+const between=(a,b)=>a+R()*(b-a);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nb=s=>s.replace(/ /g,' ');
+const rub=n=>nb(Math.round(n).toLocaleString('ru-RU'))+' ₽';
+const num=(n,d=1)=>nb(n.toLocaleString('ru-RU',{maximumFractionDigits:d}));
+const pad=n=>String(n).padStart(2,'0');
+const hm=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+const addMin=(d,m)=>new Date(d.getTime()+m*60000);
+const minsBetween=(a,b)=>Math.round((b-a)/60000);
+const WD=['вс','пн','вт','ср','чт','пт','сб'];
+const MON=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','нояб','дек'];
+function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function dayLabel(d){const y=new Date(NOW);y.setDate(y.getDate()-1);if(sameDay(d,NOW))return 'сегодня';if(sameDay(d,y))return 'вчера';return `${WD[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`}
+const when=d=>`${dayLabel(d)}, ${hm(d)}`;
+function isWork(d){const h=HOURS[d.getDay()];if(!h)return false;const x=d.getHours()+d.getMinutes()/60;return x>=h[0]&&x<h[1]}
+function nextWorkStart(d){let x=new Date(d.getFullYear(),d.getMonth(),d.getDate());for(let i=0;i<9;i++){const h=HOURS[x.getDay()];if(h){const s=new Date(x);s.setHours(Math.floor(h[0]),Math.round((h[0]%1)*60),0,0);if(s>d)return s}x=new Date(x.getFullYear(),x.getMonth(),x.getDate()+1)}return d}
+function workEnd(d){const h=HOURS[d.getDay()];const e=new Date(d);e.setHours(Math.floor(h[1]),Math.round((h[1]%1)*60),0,0);return e}
+const hoursText='пн-пт 9:30-18:00, сб 10:00-17:00';
+const ceil1=x=>Math.ceil(x*10-1e-9)/10;
+const masked=()=>`+7 9${Math.floor(R()*9)}${Math.floor(R()*9)} •••-${pad(Math.floor(R()*100))}-${pad(Math.floor(R()*100))}`;
+
+/* ================= МАРШРУТ ЗАЯВКИ (правила КП) ================= */
+// behavior: 'assigned' | 'colleague' | 'nobody' ; T1 мин
+function buildRoute(L, behavior, T1, now){
+  const ev=[], c=L.createdAt, as=L.assigned?MID[L.assigned]:null;
+  const others=MANAGERS.filter(m=>m.id!==L.assigned&&m.id!=='zhul');
+  const push=(t,k,text)=>ev.push({t,k,text});
+  push(c,'created','Клиент оставил имя и телефон, заявка создана из диалога');
+  if(as) push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru», закреплена за <b>${as.short}</b>. ${T1} мин взять может только она`);
+  else push(addMin(c,.1),'sent','Отправлена в группу «Заявки 4-7.ru». У раздела нет закреплённого менеджера, заявка сразу открыта всем');
+  let status='waiting', takenBy=null, takenAt=null, react=null, viaOpen=false;
+  const take=(t,m,from)=>{if(t<=now){push(t,'taken',`<b>${m.short}</b> нажала «Беру». Остальные видят, что клиент занят`);status='taken';takenBy=m.id;takenAt=t;react=minsBetween(from,t);return true}return false};
+  if(!isWork(c)){
+    const ws=nextWorkStart(c);
+    push(addMin(c,.2),'offhours',`Нерабочее время. Заявка помечена «ждёт менеджера», клиенту обещан звонок после ${hm(ws)} (${dayLabel(ws)})`);
+    if(behavior==='nobody'){ if(ws<=now){push(addMin(ws,T1),'nottaken','Утром никто не взял заявку. Пометка «не взято» остаётся');status='nottaken'} else status='nottaken'; }
+    else { const m = (behavior==='assigned'&&as)?as:pick(others); if(!take(addMin(ws,between(4,35)),m,ws)) status='nottaken'; }
+  } else if(!as){
+    const m=pick(others); if(!take(addMin(c,between(2,12)),m,c)) status='open';
+  } else if(behavior==='assigned'){
+    if(!take(addMin(c,between(1.5,Math.min(12,T1-1))),as,c)) status='waiting';
+  } else {
+    const open=addMin(c,T1);
+    if(open<=now){ push(open,'open',`${as.short} не ответила за ${T1} мин. Бот открыл заявку всем в группе`); viaOpen=true; status='open';
+      if(behavior==='colleague'){ const m=pick(others); take(addMin(open,between(1,9)),m,c); }
+      else { const e=workEnd(c); const ee = e>open? e : addMin(open,30); if(ee<=now){push(ee,'nottaken','До конца рабочего дня никто не взял. Пометка «не взято», ждёт менеджера');status='nottaken'} }
+    } else status='waiting';
+  }
+  ev.sort((a,b)=>a.t-b.t);
+  return {events:ev,status,takenBy,takenAt,react,viaOpen,deadline:as?addMin(c,T1):null};
+}
+
+/* ================= ГЕНЕРАЦИЯ ДЕМО-ДИАЛОГОВ ================= */
+const NAMES=['Игорь','Марина','Сергей','Ольга','Дмитрий','Анна','Алексей','Елена','Павел','Наталья','Виктор','Юлия','Михаил','Светлана','Константин','Роман','Ксения','Николай','Вера','Артур','Людмила','Глеб','Тимур','Полина'];
+let leadNo=1031;
+function stockPhrase(need,have){ if(have<=0) return ['нет', 'Сейчас этой позиции на складе нет, её привозят под заказ. Сроки и цену уточнит менеджер.'];
+  if(need<=have) return ['есть','Да, в наличии есть.'];
+  if(need<=have*1.2) return ['чуть не хватает','Чуть не хватает до нужного объёма, уточню у менеджера.'];
+  return ['не хватает','Сейчас на складе меньше, чем нужно. Уточню у менеджера сроки поставки.'];}
+
+function scenario(kind, at){
+  const d={id:'d'+Math.floor(R()*1e9).toString(36),at,msgs:[],flags:[],lead:null,client:pick(NAMES)};
+  let t=new Date(at);
+  const step=(a=.3,b=1.6)=>{t=addMin(t,between(a,b));return new Date(t)};
+  const C=(text)=>d.msgs.push({who:'client',text,t:step(.4,2.2)});
+  const B=(text)=>d.msgs.push({who:'bot',text,t:step(.1,.3)});
+  const CARDS=(items)=>d.msgs.push({who:'cards',items,t:new Date(t)});
+  const CALC=(title,rows,total)=>d.msgs.push({who:'calc',title,rows,total,t:new Date(t)});
+  const EV=(tone,text)=>d.msgs.push({who:'ev',tone,text,t:step(.1,.2)});
+  const work=isWork(at);
+  const lead=(o)=>{ // клиент заполнил форму
+    if(R()<o.p){
+      const as=SEC[o.sec]?.m||null;
+      C(`${d.client}, ${masked()}`);
+      d.lead={no:leadNo++,createdAt:new Date(t),sec:o.sec,assigned:as,client:d.client,phone:d.msgs[d.msgs.length-1].text.split(', ')[1],
+        request:o.request,calc:o.calc||null,stock:o.stock||null,reason:o.reason,page:o.page||P[o.pk]?.name||secShort(o.sec),dialog:d.id};
+      const m=as?MID[as]:null;
+      EV('lead',`Заявка №${d.lead.no} отправлена в Telegram${m?`, закреплена за ${m.short}`:', открыта всем менеджерам'}`);
+      B(work?`Спасибо, ${d.client}. Передал расчёт ${m?'менеджеру '+m.dat:'менеджеру'}, с вами свяжутся в ближайшие 15 минут.`
+            :`Спасибо, ${d.client}. Сейчас нерабочее время, передал расчёт ${m?'менеджеру '+m.dat:'менеджеру'}. Вам позвонят после ${hm(nextWorkStart(t))}.`);
+      return true;
+    } else { C(pick(['Спасибо, подумаю.','Понял, посчитаю ещё варианты.','Хорошо, позже вернусь.'])); return false; }
+  };
+  if(kind==='plit'){
+    const A=pick([12,15,18,20,24,28,30,35,40]);
+    const red=R()<.6, p=red?P.nubiec:P.rost;
+    d.sec=p.sec; d.page=p.name;
+    C(`Здравствуйте. Нужна площадка ${A} м² из плитняка, толщина около 3 см. Сколько выйдет по деньгам?`);
+    B('Здравствуйте! Для патио слоем 3-4 см подойдёт плитняк фракции 30-40 мм. Какой цвет ближе: тёплый красно-коричневый или серо-зелёный?');
+    C(red?'Скорее красноватый':'Серо-зелёный');
+    B('Подойдут эти варианты:');
+    CARDS(red?[{n:P.nubiec.name,f:'30-40 мм, красно-коричневый',p:rub(P.nubiec.pm2)+' за м²'},{n:P.sahara.name,f:'30-40 мм, светлый, под заказ',p:rub(P.sahara.pm2)+' за м²'}]
+             :[{n:P.rost.name,f:'30-40 мм, серо-зелёный',p:rub(P.rost.pm2)+' за м²'},{n:P.nubiec.name,f:'30-40 мм, красно-коричневый',p:rub(P.nubiec.pm2)+' за м²'}]);
+    const tn=ceil1(A/p.m2t), pr=priceAt(p.pt,tn), sum=tn*pr;
+    CALC(`${p.name}, ${p.fr}`,[['Площадь',`${A} м²`],['В 1 т',`около ${num(p.m2t)} м²`],['Нужно',`${num(tn)} т`],['Цена за тонну',rub(pr)]],rub(sum));
+    B(`На ${A} м² нужно ${num(tn)} т, это ${rub(sum)}. Плитняк продаётся на вес, площадь из тонны может отличаться на 5-10% в зависимости от плит.`);
+    C('А на складе есть?');
+    const [st,txt]=stockPhrase(tn,p.stock); B(txt);
+    if(st!=='есть') EV('info','Точный остаток клиенту не назван, только статус наличия');
+    B('Могу передать расчёт менеджеру: подтвердит цену, наличие и доставку. Оставите имя и телефон?');
+    lead({p:.42,sec:p.sec,pk:red?'nubiec':'rost',request:`площадка ${A} м², плитняк 3 см`,calc:`${p.name} ${p.fr}, ${num(tn)} т (≈${A} м²), ${rub(sum)}`,stock:st,reason:st==='есть'?'cta':'stock'});
+  }
+  else if(kind==='galka'){
+    const V=pick([2,3,4,5,6,8]), p=P.kasp; d.sec=p.sec; d.page=p.name;
+    C(`Здравствуйте. Хочу засыпать сухой ручей галькой, примерно ${V} м³. Что посоветуете?`);
+    B('Для сухого ручья и водоёмов хорошо подходит природная окатанная галька. Мраморную для воды не рекомендуем. Из наличия на складе по размеру подойдёт:');
+    CARDS([{n:p.name,f:'5-50 мм, серо-бежевая, окатанная',p:rub(p.pt[0][2])+' за т'},{n:'Природная галька «Черноморская»',f:'20-30 мм, цена по запросу',p:'по запросу'}]);
+    const tn=ceil1(V/p.m3t), pr=priceAt(p.pt,tn), sum=tn*pr;
+    CALC(`${p.name}, ${p.fr}`,[['Объём',`${V} м³`],['В 1 т',`около ${num(p.m3t,2)} м³`],['Нужно',`${num(tn)} т`],['Цена за тонну',rub(pr)+(tn>=6?' (от 6 т)':'')]],rub(sum));
+    B(`На ${V} м³ нужно около ${num(tn)} т, это ${rub(sum)}.`);
+    if(R()<.5){ C('А в мешках можно?'); B(`Можно, мешки по 50 кг. К цене тонны добавляется 840 ₽ за фасовку, на ваш объём это ${rub(tn*840)}.`); }
+    C('Есть в наличии?');
+    const [st,txt]=stockPhrase(tn,p.stock); B(txt);
+    EV('attn','Не хватает остатка, ИИ предлагает передать менеджеру');
+    B('Оставьте имя и телефон, менеджер подскажет сроки и альтернативу из наличия.');
+    lead({p:.5,sec:p.sec,pk:'kasp',request:`сухой ручей, галька ${V} м³`,calc:`${p.name} ${p.fr}, ${num(tn)} т (≈${V} м³), ${rub(sum)}`,stock:st,reason:'stock'});
+  }
+  else if(kind==='prince'){
+    const A=pick([15,18,22,25,30,40,55]), p=P.prince; d.sec=p.sec; d.page=p.name;
+    C(`Нужна брусчатка 100 на 100 на въезд, ${A} квадратов. Чёрная есть?`);
+    B('Есть «Черный принц», колотая брусчатка из габбро 100×100×50 мм. Толщина 50 мм подходит для въезда и стоянки. Учтите: колотая поверхность неудобна для каблуков и колясок.');
+    const n=Math.ceil(A*p.pcsM2), pr=priceAt(p.pp,n), sum=n*pr;
+    CALC(`${p.name}, ${p.fr}`,[['Площадь',`${A} м²`],['В 1 м²',`${p.pcsM2} шт`],['Нужно',`${num(n,0)} шт`],['Цена за штуку',rub(pr)]],rub(sum));
+    B(`На ${A} м² нужно ${num(n,0)} шт, это ${rub(sum)}. Количество на м² указано с учётом шва.`);
+    const [st,txt]=stockPhrase(n,p.stock); C('По наличию как?'); B(txt);
+    B('Передать расчёт менеджеру? Он посчитает доставку манипулятором.');
+    lead({p:.4,sec:p.sec,pk:'prince',request:`въезд ${A} м², брусчатка 100×100`,calc:`${p.name} ${p.fr}, ${num(n,0)} шт (≈${A} м²), ${rub(sum)}`,stock:st,reason:'cta'});
+  }
+  else if(kind==='budget'){
+    const Bd=pick([30000,40000,50000,60000]), p=P.marble; d.sec=p.sec; d.page=p.name;
+    C(`У меня бюджет ${rub(Bd)}. Хочу белую отсыпку вокруг клумб. На сколько хватит?`);
+    B('Для белой декоративной отсыпки подойдёт мраморная крошка 5-10 мм. Для детской площадки её не используют, для клумб и дорожек подходит.');
+    const pr=p.pt[0][2], tn=Bd/pr, v=tn*p.m3t, area=v/0.05;
+    CALC(`${p.name}, ${p.fr}`,[['Бюджет',rub(Bd)],['Цена за тонну',rub(pr)],['Получится',`${num(tn,2)} т ≈ ${num(v,2)} м³`],['Слой отсыпки','5 см']],`≈ ${num(area,0)} м²`);
+    B(`На ${rub(Bd)} выйдет около ${num(tn,1)} т крошки. Слоем 5 см это примерно ${num(area,0)} м². Под отсыпку советуем геотекстиль, чтобы не прорастала трава.`);
+    lead({p:.15,sec:p.sec,pk:'marble',request:`бюджет ${rub(Bd)}, белая отсыпка`,calc:`${p.name} ${p.fr}, ${num(tn,1)} т (≈${num(area,0)} м² слоем 5 см), ${rub(Bd)}`,stock:'есть',reason:'cta'});
+  }
+  else if(kind==='fountain'){
+    const sec='Фонтаны и МАФЫ Фонтаны'; d.sec=sec; d.page='Фонтаны';
+    C('Хочу фонтан из камня на участок. Что есть и сколько стоит?');
+    EV('attn','Раздел «Фонтаны» в списке «сразу на менеджера», ИИ не консультирует');
+    B(work?'По фонтанам лучше проконсультирует менеджер: подберёт модель, насос и подготовку основания. Оставьте имя и телефон, соединю с Анной Александровной.'
+           :'По фонтанам консультирует менеджер. Сейчас нерабочее время: оставьте имя и телефон, вам перезвонят утром.');
+    lead({p:.7,sec,request:'фонтан из камня на участок',calc:null,stock:null,reason:'section',page:'Фонтаны'});
+  }
+  else if(kind==='probe'){
+    const p=P.nubiec; d.sec=p.sec; d.page=p.name; d.flags.push('probe');
+    C('Сколько у вас точно тонн Нубийца на складе? И цена, если брать 30 т');
+    B(`«Нубиец» 30-40 мм в наличии есть. Для партии больше 20 т на сайте указана цена ${rub(p.pt[2][2])} за тонну, но такой объём собирают под заказ: точные сроки и цену подтвердит менеджер.`);
+    EV('attn','Крупный объём: больше лимита по группе. ИИ не раскрывает остаток');
+    C('Мне просто узнать, сколько тонн есть сейчас');
+    B('Точные остатки сообщает менеджер. Если оставите телефон, он перезвонит в течение 15 минут.');
+    C('Нет, телефон не дам');
+    EV('err','Отказ дать контакт при крупном запросе. Отмечено в журнале');
+  }
+  else if(kind==='consult'){
+    const p=P.irbis; d.sec=p.sec; d.page=p.name;
+    C('Можно мраморную гальку «Ирбис» положить в пруд?');
+    B('Мраморную гальку для водоёмов и ручьёв не рекомендуем: мрамор впитывает воду и со временем портится. Для пруда лучше природная галька:');
+    CARDS([{n:P.kasp.name,f:'5-50 мм, морская, окатанная',p:rub(P.kasp.pt[0][2])+' за т'},{n:'Природная галька «Черноморская»',f:'20-30 мм',p:'по запросу'}]);
+    C('Понятно, спасибо');
+    B('Пожалуйста. Если нужно посчитать объём, напишите размеры пруда.');
+  }
+  else if(kind==='wall'){
+    const L=pick([6,8,10,12]), H=pick([.5,.6,.8]), W=.4, p=P.volga; d.sec=p.sec; d.page=p.name;
+    C(`Нужна подпорная стенка: длина ${num(L)} м, высота ${num(H)} м, толщина ${num(W)} м. Сколько камня?`);
+    B('Для подпорной стены подходит постелистый бут. Например, «Волга» из песчаника 6-10 см.');
+    const v=L*H*W, tn=ceil1(v*2.3), pr=priceAt(p.pt,tn), sum=tn*pr;
+    CALC(`${p.name}, ${p.fr}`,[['Объём стены',`${num(v,2)} м³`],['Плотность в кладке','2,3 т/м³ (2,2-2,4)'],['Нужно',`${num(tn)} т`],['Цена за тонну',rub(pr)+(tn>=6?' (от 6 т)':'')]],rub(sum));
+    B(`Объём стены ${num(v,2)} м³. В кладке камень лежит плотно, поэтому считаем 2,3 т на м³: нужно около ${num(tn)} т, это ${rub(sum)}.`);
+    C('Есть сейчас?');
+    B('По этой позиции наличие уточнит менеджер, она бывает под заказ.');
+    lead({p:.45,sec:p.sec,pk:'volga',request:`подпорная стена ${num(L)}×${num(H)}×${num(W)} м`,calc:`${p.name} ${p.fr}, ${num(tn)} т, ${rub(sum)}`,stock:'под заказ',reason:'order'});
+  }
+  else if(kind==='order'){
+    const p=P.sahara, A=pick([15,20,25]); d.sec=p.sec; d.page=p.name;
+    C(`Есть плитняк «Сахара» 30-40? Нужно ${A} м²`);
+    B('«Сахара» 30-40 мм возим под заказ, на складе её сейчас нет.');
+    const tn=ceil1(A/p.m2t), sum=tn*p.pt[0][2];
+    CALC(`${p.name}, ${p.fr}`,[['Площадь',`${A} м²`],['В 1 т',`около ${num(p.m2t)} м²`],['Нужно',`${num(tn)} т`],['Цена за тонну',rub(p.pt[0][2])]],rub(sum));
+    EV('attn',work?'Товар под заказ, рабочее время: соединить с менеджером':'Товар под заказ, нерабочее время: собрать контакт и отправить заявку');
+    B(work?'Соединю с менеджером, он скажет сроки поставки. Оставьте имя и телефон.':'Сейчас нерабочее время. Оставьте имя и телефон, менеджер утром скажет сроки поставки.');
+    lead({p:.6,sec:p.sec,pk:'sahara',request:`плитняк «Сахара» под заказ, ${A} м²`,calc:`${p.name} ${p.fr}, ${num(tn)} т (≈${A} м²), ${rub(sum)}`,stock:'под заказ',reason:'order'});
+  }
+  else if(kind==='boulder'){
+    const k=pick([2,3]), p=P.boulder; d.sec=p.sec; d.page=p.name;
+    C(`Нужно ${k} крупных валуна для водоёма, примерно по метру.`);
+    B('Для водоёма подойдёт валун «Лесной» 900-1800 мм, на части камней есть мох и лишайник. Валун около метра весит 1,3-1,8 т.');
+    const tn=k*1.5, sum=tn*p.pt[0][2];
+    CALC(`${p.name}, ${p.fr}`,[['Камней',`${k} шт`],['Вес одного','около 1,5 т'],['Всего',`около ${num(tn)} т`],['Цена за тонну',rub(p.pt[0][2])]],`≈ ${rub(sum)}`);
+    B(`Ориентир ${rub(sum)}, точная сумма по весу выбранных камней. Камни до 6 т разгружает манипулятор, тяжелее нужен кран. Крупные валуны можно выбрать на складе поштучно.`);
+    lead({p:.45,sec:p.sec,pk:'boulder',request:`${k} валуна около 1 м для водоёма`,calc:`${p.name} ${p.fr}, ≈${num(tn)} т, ≈${rub(sum)}`,stock:'есть',reason:'cta'});
+  }
+  else if(kind==='unassigned'){
+    const sec='Камень для мощения Уличный керамогранит'; d.sec=sec; d.page='Уличный керамогранит Black';
+    const A=pick([20,30,40]);
+    C(`Уличный керамогранит Black подойдёт на пол гаража? Площадь ${A} м²`);
+    B('Да, плиты толщиной 18 мм подходят для пола гаража и автостоянки. Поверхность не скользит даже в мокрую погоду. Цену на ваш объём подтвердит менеджер.');
+    lead({p:.55,sec,request:`керамогранит Black, гараж ${A} м²`,calc:null,stock:null,reason:'cta',page:'Уличный керамогранит Black'});
+  }
+  else { // short
+    const p=pick([P.nubiec,P.prince,P.kasp]); d.sec=p.sec; d.page=p.name;
+    C(pick(['Здравствуйте, вы работаете в выходные?','Где находится склад?','Можно приехать посмотреть камень?']));
+    B(`Склад в пос. ВНИИССОК, Одинцовский район. Режим: ${hoursText}. Камень можно посмотреть в массе на складе, образцы на стенде могут отличаться.`);
+    C('Спасибо');
+  }
+  // ничего не должно быть позже «сейчас»: сдвигаем весь диалог назад
+  const over=d.msgs[d.msgs.length-1].t-NOW;
+  if(over>0){const sh=over+60000; for(const m of d.msgs) m.t=new Date(m.t-sh); d.at=new Date(d.at-sh); if(d.lead) d.lead.createdAt=new Date(d.lead.createdAt-sh);}
+  d.last=d.msgs[d.msgs.length-1].t;
+  d.mgr=SEC[d.sec]?.m||null;
+  return d;
+}
+
+const MIX=[['plit',17],['galka',9],['prince',10],['budget',9],['fountain',7],['probe',4],['consult',14],['wall',6],['order',6],['boulder',5],['unassigned',4],['short',14]];
+function pickKind(){const tot=MIX.reduce((s,x)=>s+x[1],0);let r=R()*tot;for(const [k,w] of MIX){if((r-=w)<0)return k}return 'short'}
+function randomTime(dayOffset){ // часы обращений: днём и вечером, когда менеджеров уже нет
+  const hw=[0,0,0,0,0,0,0,1,2,4,6,7,7,6,5,5,5,4,4,5,6,5,3,1];
+  const tot=hw.reduce((a,b)=>a+b,0); let r=R()*tot, h=0; for(;h<24;h++){if((r-=hw[h])<0)break}
+  const d=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-dayOffset,h,Math.floor(R()*60));
+  return d;
+}
+const DIALOGS=[];
+for(let off=6;off>=0;off--){
+  const n = off===0 ? 7 : 8+Math.floor(R()*4);
+  for(let i=0;i<n;i++){ let at=randomTime(off); if(at>addMin(NOW,-6)) at=addMin(NOW,-between(8,300)); DIALOGS.push(scenario(pickKind(),at)); }
+}
+// пара живых диалогов прямо сейчас
+DIALOGS.push(scenario('plit',addMin(NOW,-9)));
+DIALOGS.push(scenario('galka',addMin(NOW,-4)));
+DIALOGS.push(scenario('consult',addMin(NOW,-3)));
+DIALOGS.sort((a,b)=>b.last-a.last);
+// маршруты заявок
+for(const d of DIALOGS){
+  if(d.lead){
+    const r=R(); const beh = r<.68?'assigned': r<.9?'colleague':'nobody';
+    Object.assign(d.lead, buildRoute(d.lead, beh, T1_DEFAULT, NOW), {behavior:beh});
+  }
+  const live = minsBetween(d.last,NOW)<12;
+  d.status = d.lead ? 'lead' : live ? 'ai' : 'done';
+  d.costRub = Math.round(between(18,55));
+}
+const LEADS=DIALOGS.filter(d=>d.lead).map(d=>d.lead).sort((a,b)=>b.createdAt-a.createdAt);
+const DBY=Object.fromEntries(DIALOGS.map(d=>[d.id,d]));
+const REASON={cta:'Клиент оставил контакт',stock:'Не хватает остатка',order:'Товар под заказ',section:'Раздел на менеджера',large:'Крупный объём'};
+const LSTATUS={waiting:['Ждёт закреплённого','b-attn'],open:['Открыта всем','b-attn'],taken:['Взята','b-done'],nottaken:['Не взята','b-err']};
+
+/* ================= СОСТОЯНИЕ ================= */
+const S={route:'dialogs', dsub:'messages', dId:DIALOGS[0].id, fStatus:'all', fSec:'all', fMgr:'all', q:'', mobile:'list',
+  lId:LEADS[0]?.no, lFilter:'all'};
+try{const saved=JSON.parse(localStorage.getItem('pult47')||'{}'); if(saved.dsub) S.dsub=saved.dsub;}catch(e){}
+
+/* ================= РЕНДЕР: общие куски ================= */
+const $main=document.getElementById('main');
+function top(title,sub,right=''){const s=addMin(NOW,-6*1440);return `<div class="top"><div><h1>${title}</h1><p>${sub}</p></div><div class="top-r">${right}<span class="chip">7 дней · ${s.getDate()}-${NOW.getDate()} ${MON[NOW.getMonth()]}</span><span class="chip demo">Демо-данные</span></div></div>`}
+function statusBadge(d){
+  if(d.status==='ai') return '<span class="badge b-ai"><span class="dot"></span>ИИ ведёт</span>';
+  if(d.status==='lead'){const [t,c]=LSTATUS[d.lead.status];return `<span class="badge b-lead">Заявка №${d.lead.no}</span><span class="badge ${c}">${t}</span>`}
+  return '<span class="badge b-info">Завершён ИИ</span>';
+}
+function mgrName(id){return id?MID[id].short:'не закреплён'}
+
+/* ================= ДИАЛОГИ ================= */
+function filteredDialogs(){
+  return DIALOGS.filter(d=>{
+    if(S.fStatus!=='all'&&d.status!==S.fStatus) return false;
+    if(S.fSec!=='all'&&d.sec!==S.fSec) return false;
+    if(S.fMgr!=='all'){ if(S.fMgr==='none'? d.mgr!==null : d.mgr!==S.fMgr) return false; }
+    if(S.q){const q=S.q.toLowerCase(); if(!(d.page+' '+d.client+' '+d.msgs.map(m=>m.text||'').join(' ')).toLowerCase().includes(q)) return false;}
+    return true;
+  });
+}
+function renderDialogs(){
+  const queue=LEADS.filter(l=>l.status!=='taken');
+  const list=filteredDialogs();
+  if(!list.find(d=>d.id===S.dId)&&list.length) S.dId=list[0].id;
+  const d=DBY[S.dId];
+  const secsUsed=[...new Set(DIALOGS.map(x=>x.sec))].sort();
+  const cnt=k=>DIALOGS.filter(x=>k==='all'||x.status===k).length;
+  let html=top('Диалоги','Вся переписка ИИ-менеджера с посетителями сайта: что спросили, что посчитал бот и когда передал заявку менеджеру.');
+  html+=`<div class="subnav" role="tablist"><button role="tab" data-dsub="messages" aria-selected="${S.dsub==='messages'}">Сообщения</button><button role="tab" data-dsub="queue" aria-selected="${S.dsub==='queue'}">Очередь ${queue.length?`<span class="badge b-attn">${queue.length}</span>`:''}</button></div>`;
+  if(S.dsub==='queue'){ html+=renderQueue(queue); $main.innerHTML=html; return; }
+  html+=`<div class="dlg" data-mobile="${S.mobile}">
+   <section class="panel list" aria-label="Список диалогов">
+    <div class="filters">
+      <select id="fStatus" aria-label="Статус"><option value="all">Статус: все (${cnt('all')})</option><option value="ai">ИИ ведёт (${cnt('ai')})</option><option value="lead">Передан менеджеру (${cnt('lead')})</option><option value="done">Завершён ИИ (${cnt('done')})</option></select>
+      <select id="fSec" aria-label="Раздел"><option value="all">Раздел: все</option>${secsUsed.map(s=>`<option value="${esc(s)}">${esc(secShort(s))}</option>`).join('')}</select>
+      <select id="fMgr" aria-label="Менеджер"><option value="all">Менеджер: все</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="none">Не закреплён</option></select>
+      <input id="q" class="search" type="search" placeholder="Поиск по товару, клиенту, тексту" value="${esc(S.q)}">
+    </div>
+    <div class="rows">${list.length?list.map(x=>{
+      const first=x.msgs.find(m=>m.who==='client');
+      return `<button class="row" data-dlg="${x.id}" aria-current="${x.id===S.dId}">
+        <div class="row-t"><b>${esc(x.client)}</b><span class="badge b-info">Сайт</span><span class="time">${dayLabel(x.last)==='сегодня'?hm(x.last):dayLabel(x.last).replace(/^.., /,'')}</span></div>
+        <p>${esc(first?first.text:'')}</p>
+        <div class="tags">${statusBadge(x)}${x.flags.includes('probe')?'<span class="badge b-err">Прощупывание</span>':''}</div></button>`}).join(''):'<div class="empty">Под фильтр ничего не попало</div>'}</div>
+   </section>`;
+  html+= d? renderChat(d)+renderInfo(d) : '<section class="panel chat"><div class="empty">Выберите диалог</div></section>';
+  html+='</div>';
+  $main.innerHTML=html;
+  document.getElementById('fStatus').value=S.fStatus; document.getElementById('fSec').value=S.fSec; document.getElementById('fMgr').value=S.fMgr;
+  const box=document.querySelector('.msgs'); if(box) box.scrollTop=box.scrollHeight;
+}
+function renderChat(d){
+  const msgs=d.msgs.map(m=>{
+    if(m.who==='client') return `<div class="m client"><div class="bub">${esc(m.text)}</div><div class="meta">${esc(d.client)} · ${hm(m.t)}</div></div>`;
+    if(m.who==='bot') return `<div class="m bot"><div class="bub">${esc(m.text)}</div><div class="meta">ИИ-менеджер · ${hm(m.t)}</div></div>`;
+    if(m.who==='cards') return `<div class="m bot"><div class="cards">${m.items.map(i=>`<div class="pcard"><b>${esc(i.n)}</b><span class="pr">${esc(i.p)}</span><span>${esc(i.f)}</span></div>`).join('')}</div></div>`;
+    if(m.who==='calc') return `<div class="m bot"><div class="calc"><div class="ct">Расчёт: ${esc(m.title)}</div><dl>${m.rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}<dt class="tot">Итого</dt><dd class="tot">${esc(m.total)}</dd></dl></div></div>`;
+    const cls={lead:'b-lead',attn:'b-attn',err:'b-err',info:'b-info',done:'b-done'}[m.tone];
+    return `<div class="ev ${cls}"><span class="dot"></span>${esc(m.text)} · ${hm(m.t)}</div>`;
+  }).join('');
+  return `<section class="panel chat" aria-label="Переписка">
+    <div class="chat-h"><div class="who"><button class="btn ghost back" data-back>Назад к списку</button><b>${esc(d.client)}</b><span>Сайт · пришёл со страницы «${esc(d.page)}» · ${when(d.at)}</span></div>
+      <div class="top-r">${statusBadge(d)}</div></div>
+    <div class="msgs">${msgs}</div>
+    <div class="chat-f">${d.status==='ai'?'<span class="badge b-ai"><span class="dot"></span>ИИ сейчас в диалоге</span>':d.status==='lead'?'Диалог передан менеджеру через Telegram. Ответ клиенту идёт по телефону.':'ИИ ответил сам, менеджер не понадобился.'}</div>
+  </section>`;
+}
+function renderInfo(d){
+  const s=SEC[d.sec]; const L=d.lead;
+  let h=`<section class="panel info" aria-label="Карточка диалога"><div class="panel-h"><h3>Карточка</h3></div>
+   <dl class="kv"><dt>Раздел</dt><dd>${esc(secShort(d.sec))}</dd><dt>Закреплён</dt><dd>${s&&s.m?MID[s.m].short:'<span class="badge b-attn">нет на сайте</span>'}</dd>
+   <dt>Начат</dt><dd>${when(d.at)}</dd><dt>Сообщений</dt><dd class="num">${d.msgs.filter(m=>m.who==='client'||m.who==='bot').length}</dd><dt>Расход ИИ</dt><dd class="num">≈ ${rub(d.costRub)}</dd></dl>`;
+  if(L){
+    h+=`<div class="sect"><div class="eyebrow">Заявка №${L.no}</div><div>${LSTATUS[L.status]?`<span class="badge ${LSTATUS[L.status][1]}">${LSTATUS[L.status][0]}</span>`:''} <span class="badge b-info">${REASON[L.reason]}</span></div>
+      ${L.calc?`<div class="small">${esc(L.calc)}</div>`:''}
+      ${renderTimeline(L.events)}
+      <button class="btn" data-openlead="${L.no}">Открыть в заявках</button></div>`;
+  } else if(d.flags.includes('probe')){
+    h+=`<div class="sect"><div class="eyebrow">Защита данных</div><div class="small">Клиент спрашивал точный остаток и цену на крупный объём, контакт оставить отказался. ИИ назвал только статус наличия.</div></div>`;
+  }
+  return h+'</section>';
+}
+function renderTimeline(ev,upTo=Infinity){
+  return `<ol class="tl">${ev.map((e,i)=>`<li class="k-${e.k}${i>upTo?' future':''}"><span class="tt">${hm(e.t)}</span><span class="pt"></span><span class="tx">${e.text}</span></li>`).join('')}</ol>`;
+}
+function renderQueue(q){
+  if(!q.length) return '<div class="panel empty">Очередь пуста: все заявки взяты</div>';
+  return `<div class="panel"><div class="panel-h"><h2>Ждут менеджера сейчас</h2><span class="small muted">Заявки, которые ещё никто не взял</span></div><div class="tbl-wrap"><table><thead><tr><th>№</th><th>Создана</th><th>Клиент</th><th>Запрос</th><th>Закреплена</th><th>Статус</th></tr></thead><tbody>
+   ${q.map(l=>`<tr data-openlead="${l.no}"><td class="num">${l.no}</td><td>${when(l.createdAt)}</td><td>${esc(l.client)}</td><td>${esc(l.request)}</td><td>${mgrName(l.assigned)}</td><td><span class="badge ${LSTATUS[l.status][1]}">${LSTATUS[l.status][0]}</span></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+/* ================= ЗАЯВКИ + TELEGRAM ================= */
+function tgLeadText(L){
+  const as=L.assigned?MID[L.assigned]:null;
+  return `<b>Заявка №${L.no}</b> · ${esc(secShort(L.sec))}
+<b>Клиент:</b> ${esc(L.client)}, ${esc(L.phone)}
+<b>Запрос:</b> ${esc(L.request)}${L.calc?`
+<b>Расчёт:</b> ${esc(L.calc)}`:''}${L.stock?`
+<b>Наличие:</b> ${esc(L.stock)}`:''}
+<b>Причина:</b> ${REASON[L.reason].toLowerCase()}
+<b>Страница:</b> ${esc(L.page)}
+${as?`<b>Закреплена:</b> ${as.short}${L.deadline?` · взять до ${hm(L.deadline)}`:''}`:'<b>Закреплена:</b> нет, раздел без менеджера'}`;
+}
+function renderTG(L, upTo=Infinity, title='Заявки 4-7.ru'){
+  if(!L) return `<div class="tg"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body"><div class="tg-svc">Заявок пока нет</div></div></div>`;
+  const ev=L.events.filter((e,i)=>i<=upTo);
+  const taken=ev.find(e=>e.k==='taken');
+  const as=L.assigned?MID[L.assigned]:null;
+  if(!ev.find(e=>e.k==='sent')) return `<div class="tg"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body"><div class="tg-svc">${ev.length?'Бот собирает заявку из диалога':'Здесь появится сообщение бота'}</div></div></div>`;
+  let body=`<div class="tg-svc">${dayLabel(L.createdAt)}</div>
+   <div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">${tgLeadText(L)}${taken?`\n\n<b>Взята:</b> ${MID[L.takenBy].short} в ${hm(L.takenAt)}`:''}</div>
+   <div class="tg-kb"><span class="${taken?'off':''}">${taken?'Взята':'Беру'}</span><span>Открыть диалог</span></div>
+   <div class="tm">${taken?'<span class="tg-edit">изменено · </span>':''}${hm(L.createdAt)}</div></div>`;
+  for(const e of ev){
+    if(e.k==='offhours') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">Нерабочее время. Заявка №${L.no} ждёт менеджера, клиенту обещан звонок после ${hm(nextWorkStart(L.createdAt))}.</div><div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='open') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">${as?esc(as.short)+' не ответила за '+minsBetween(L.createdAt,e.t)+' мин. ':''}Заявка №${L.no} открыта всем: кто свободен, нажмите «Беру».</div>${taken?'':'<div class="tg-kb"><span>Беру</span><span>Открыть диалог</span></div>'}<div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='taken') body+=`<div class="tg-svc pop">${esc(MID[L.takenBy].short)} взяла заявку №${L.no} · ${hm(e.t)}</div>`;
+    if(e.k==='nottaken') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">Заявка №${L.no} не взята. Висит с пометкой «не взято» до первого свободного менеджера.</div><div class="tm">${hm(e.t)}</div></div>`;
+  }
+  return `<div class="tg" aria-label="Как заявка выглядит в Telegram"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body">${body}</div></div>`;
+}
+function renderLeads(){
+  const list=LEADS.filter(l=>S.lFilter==='all'||l.status===S.lFilter);
+  if(!list.find(l=>l.no===S.lId)&&list.length) S.lId=list[0].no;
+  const L=LEADS.find(l=>l.no===S.lId);
+  const taken=LEADS.filter(l=>l.status==='taken'), byAs=taken.filter(l=>l.takenBy===l.assigned&&!l.viaOpen);
+  const reactW=taken.filter(l=>isWork(l.createdAt)); const avg=reactW.length?Math.round(reactW.reduce((s,l)=>s+l.react,0)/reactW.length):0;
+  const c=k=>LEADS.filter(l=>k==='all'||l.status===k).length;
+  let h=top('Заявки в Telegram','Каждая заявка уходит в группу менеджеров: сначала закреплённому за разделом, через T1 открывается всем. Здесь видно, кому ушла, во сколько и кто взял.');
+  h+=`<div class="strip">
+    <div class="stat"><span class="metric">Заявок за 7 дней</span><span class="v">${LEADS.length}</span><span class="s">из ${DIALOGS.length} диалогов</span></div>
+    <div class="stat"><span class="metric">Взял закреплённый</span><span class="v">${Math.round(byAs.length/Math.max(1,taken.length)*100)}%</span><span class="s">${byAs.length} из ${taken.length} взятых</span></div>
+    <div class="stat"><span class="metric">Реакция в рабочее время</span><span class="v">${avg} мин</span><span class="s">от отправки до «Беру»</span></div>
+    <div class="stat"><span class="metric">Ушли в общий чат</span><span class="v">${LEADS.filter(l=>l.viaOpen).length}</span><span class="s">не взяли за ${T1_DEFAULT} мин</span></div>
+    <div class="stat"><span class="metric">Ждут сейчас</span><span class="v">${c('waiting')+c('open')+c('nottaken')}</span><span class="s">${c('nottaken')} с пометкой «не взято»</span></div>
+  </div>`;
+  h+=`<div class="leads"><section class="panel"><div class="panel-h"><div class="seg" role="group" aria-label="Фильтр по статусу">
+     ${[['all','Все'],['waiting','Ждёт закреплённого'],['open','Открыта всем'],['taken','Взята'],['nottaken','Не взята']].map(([k,t])=>`<button data-lf="${k}" aria-pressed="${S.lFilter===k}">${t} · ${c(k)}</button>`).join('')}</div></div>
+   <div class="tbl-wrap"><table><thead><tr><th>№</th><th>Создана</th><th>Клиент и запрос</th><th>Раздел</th><th>Закреплена</th><th>Взяла</th><th class="r">Реакция</th><th>Статус</th></tr></thead><tbody>
+   ${list.map(l=>`<tr data-lead="${l.no}" class="${l.no===S.lId?'sel':''}"><td class="num">${l.no}</td><td style="white-space:nowrap">${when(l.createdAt)}${isWork(l.createdAt)?'':'<br><span class="small muted">нерабочее</span>'}</td>
+     <td><b>${esc(l.client)}</b><br><span class="small muted">${esc(l.request)}</span></td><td class="small">${esc(secShort(l.sec))}</td><td class="small">${mgrName(l.assigned)}</td>
+     <td class="small">${l.takenBy?MID[l.takenBy].short+(l.viaOpen?'<br><span class="muted">из общего чата</span>':''):'<span class="muted">пока никто</span>'}</td>
+     <td class="r num">${l.react!=null?l.react+' мин':'<span class="muted">нет</span>'}</td><td><span class="badge ${LSTATUS[l.status][1]}">${LSTATUS[l.status][0]}</span></td></tr>`).join('')}
+   </tbody></table></div></section>
+   <aside style="display:flex;flex-direction:column;gap:12px;min-width:0">${L?renderTG(L):renderTG(null)}
+    ${L?`<section class="panel"><div class="panel-h"><h3>Маршрут заявки №${L.no}</h3><button class="btn" data-opendlg="${L.dialog}">Открыть диалог</button></div><div class="pb">${renderTimeline(L.events)}</div></section>`:''}
+   </aside></div>`;
+  $main.innerHTML=h;
+}
+
+/* ================= ПРОВЕРКА МАРШРУТА ================= */
+const SIM={sec:'Природный камень Плитняки', time:'work', beh:'assigned', T1:15, step:-1, L:null, timer:null};
+const SIM_TIMES={work:{label:'Рабочее время, чт 11:40',d:new Date(2026,10,12,11,40)},late:{label:'Вечер буднего дня, чт 20:15',d:new Date(2026,10,12,20,15)},sat:{label:'Суббота 18:30, склад уже закрыт',d:new Date(2026,10,14,18,30)},sun:{label:'Воскресенье 13:00, выходной',d:new Date(2026,10,15,13,0)}};
+function simBuild(){
+  const save=R; R=rng(99);
+  const start=SIM_TIMES[SIM.time].d;
+  const L={no:1100,createdAt:start,sec:SIM.sec,assigned:SEC[SIM.sec].m,client:'Тестовый клиент',phone:'+7 900 •••-00-00',request:'тестовая заявка',calc:'Плитняк «Нубиец» 30-40 мм, 1,5 т (≈20 м²), 28 200 ₽',stock:'есть',reason:SEC[SIM.sec].h?'section':'cta',page:secShort(SIM.sec)};
+  const far=addMin(start,3*1440);
+  Object.assign(L, buildRoute(L,SIM.beh,SIM.T1,far));
+  R=save; SIM.L=L;
+}
+function renderSim(){
+  if(!SIM.L) simBuild();
+  const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)];
+  const s=SEC[SIM.sec];
+  let h=top('Проверка маршрута','Выберите раздел, время обращения и как поведут себя менеджеры. Бот проведёт тестовую заявку по правилам из КП и покажет, что увидит группа в Telegram.');
+  h+=`<div class="sim"><section class="panel"><div class="panel-h"><h2>Условия</h2></div><form class="form" id="simForm">
+    <div class="field"><label for="simSec">Раздел, откуда пришёл клиент</label><select id="simSec">${SECTIONS.map(x=>`<option value="${esc(x.c)}">${esc(secShort(x.c))}${x.m?'':' · без менеджера'}${x.h?' · сразу на менеджера':''}</option>`).join('')}</select>
+      <span class="hint">Закреплён: ${s.m?MID[s.m].short:'никто, заявка сразу открыта всем'}${s.h?'. ИИ по разделу не консультирует.':''}</span></div>
+    <div class="field"><span class="lbl">Когда обратился клиент</span><div class="radios">${Object.entries(SIM_TIMES).map(([k,v])=>`<label><input type="radio" name="simTime" value="${k}" ${SIM.time===k?'checked':''}>${v.label}</label>`).join('')}</div></div>
+    <div class="field"><span class="lbl">Как ответят менеджеры</span><div class="radios">
+      <label><input type="radio" name="simBeh" value="assigned" ${SIM.beh==='assigned'?'checked':''}>Закреплённый берёт сам</label>
+      <label><input type="radio" name="simBeh" value="colleague" ${SIM.beh==='colleague'?'checked':''}>Закреплённый молчит, берёт коллега</label>
+      <label><input type="radio" name="simBeh" value="nobody" ${SIM.beh==='nobody'?'checked':''}>Никто не берёт</label></div></div>
+    <div class="field"><label for="simT1">Время на ответ закреплённому (T1)</label><select id="simT1">${[5,10,15,20,30].map(v=>`<option value="${v}" ${SIM.T1===v?'selected':''}>${v} мин</option>`).join('')}</select><span class="hint">Значение уточняем у клиента, в КП обозначено как T1</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="submit" class="btn primary">Запустить заявку</button><button type="button" class="btn" data-simall>Показать всё сразу</button></div>
+  </form></section>
+  <section class="panel"><div class="panel-h"><h2>Что происходит</h2>${cur?`<span class="badge ${SIM.step>=L.events.length-1?LSTATUS[L.status][1]:'b-attn'}">${SIM.step>=L.events.length-1?LSTATUS[L.status][0]:'идёт'}</span>`:''}</div>
+    <div class="pb" style="display:flex;flex-direction:column;gap:14px">
+      <div><div class="eyebrow">Время</div><div class="clock num" id="simClock">${cur?hm(cur.t):hm(L.createdAt)}</div><div class="small muted">${dayLabel(L.createdAt)}${isWork(L.createdAt)?', рабочее время':', нерабочее время'}</div></div>
+      ${SIM.step<0?'<div class="small muted">Нажмите «Запустить заявку», шаги появятся по очереди.</div>':renderTimeline(L.events,SIM.step)}
+    </div></section>
+  ${renderTG(L, SIM.step)}
+  </div>`;
+  $main.innerHTML=h;
+  document.getElementById('simSec').value=SIM.sec;
+}
+function simRun(all){
+  clearInterval(SIM.timer); simBuild();
+  const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(all||reduce){SIM.step=SIM.L.events.length-1;render();return}
+  SIM.step=0; render();
+  SIM.timer=setInterval(()=>{ if(SIM.step>=SIM.L.events.length-1){clearInterval(SIM.timer);return} SIM.step++; render(); },1100);
+}
+
+/* ================= АНАЛИТИКА ================= */
+function renderAnalytics(){
+  const N=DIALOGS.length, withCalc=DIALOGS.filter(d=>d.msgs.some(m=>m.who==='calc')).length, leads=LEADS.length, taken=LEADS.filter(l=>l.status==='taken').length;
+  const auto=DIALOGS.filter(d=>!d.lead).length, off=DIALOGS.filter(d=>!isWork(d.at)).length;
+  const cost=DIALOGS.reduce((s,d)=>s+d.costRub,0);
+  let h=top('Аналитика','Сколько обращений закрыл ИИ, сколько стало заявками и как быстро менеджеры их забирают.');
+  h+=`<div class="kpis">
+   <div class="kpi"><span class="metric">Диалогов</span><span class="v">${N}</span><span class="s">${DIALOGS.reduce((s,d)=>s+d.msgs.filter(m=>m.who==='client'||m.who==='bot').length,0)} сообщений</span></div>
+   <div class="kpi"><span class="metric">ИИ ответил сам</span><span class="v">${Math.round(auto/N*100)}%</span><span class="s">${auto} без передачи менеджеру</span></div>
+   <div class="kpi"><span class="metric">Конверсия в заявку</span><span class="v">${Math.round(leads/N*100)}%</span><span class="s">${leads} заявок с контактом</span></div>
+   <div class="kpi"><span class="metric">Вне рабочего времени</span><span class="v">${Math.round(off/N*100)}%</span><span class="s">${off} обращений, раньше без ответа</span></div>
+   <div class="kpi"><span class="metric">Расход ИИ</span><span class="v">${rub(cost)}</span><span class="s">${rub(cost/Math.max(1,leads))} на заявку</span></div></div>`;
+  const F=[['Диалоги',N,'var(--navy)'],['Был расчёт',withCalc,'var(--accent)'],['Оставили контакт',leads,'var(--lead-ink)'],['Менеджер взял',taken,'var(--done-ink)']];
+  h+=`<div class="grid2"><section class="panel"><div class="panel-h"><h2>Воронка</h2><span class="small muted">диалог → заявка ${Math.round(leads/N*100)}%</span></div><div class="pb funnel">
+    ${F.map(([t,v,c],i)=>`<div class="fn"><span>${t}</span><div class="bar"><i style="width:${Math.max(2,v/N*100)}%;background:${c}"></i></div><span class="val">${v}${i?` · ${Math.round(v/F[i-1][1]*100)}%`:''}</span></div>`).join('')}</div></section>
+   <section class="panel"><div class="panel-h"><h2>Почему передали менеджеру</h2></div><div class="pb">
+    ${Object.entries(REASON).map(([k,t])=>{const v=LEADS.filter(l=>l.reason===k).length;return `<div class="hbar"><span>${t}</span><div class="bar"><i style="width:${v/Math.max(1,leads)*100}%"></i></div><span class="num" style="text-align:right">${v}</span></div>`}).join('')}
+    <div class="hbar"><span>Прощупывание без контакта</span><div class="bar"><i style="width:${DIALOGS.filter(d=>d.flags.includes('probe')).length/Math.max(1,leads)*100}%;background:var(--err-ink)"></i></div><span class="num" style="text-align:right">${DIALOGS.filter(d=>d.flags.includes('probe')).length}</span></div>
+   </div></section></div>`;
+  h+=`<div class="grid2b"><section class="panel chart"><div class="panel-h"><h2>Часы обращений</h2><span class="small muted">серым: рабочие часы склада</span></div>${hoursChart()}<div class="legend"><span><i style="background:var(--accent)"></i>в рабочее время</span><span><i style="background:var(--attn-ink)"></i>вне рабочего времени</span></div></section>
+   <section class="panel chart"><div class="panel-h"><h2>По дням</h2></div>${daysChart()}<div class="legend"><span><i style="background:var(--surface-2);border:1px solid var(--line)"></i>диалоги</span><span><i style="background:var(--lead-ink)"></i>заявки</span></div></section></div>`;
+  const rows=MANAGERS.map(m=>{const as=LEADS.filter(l=>l.assigned===m.id);const self=as.filter(l=>l.takenBy===m.id&&!l.viaOpen).length;const fromOpen=LEADS.filter(l=>l.takenBy===m.id&&l.viaOpen).length;const lost=as.filter(l=>l.viaOpen).length;const rs=LEADS.filter(l=>l.takenBy===m.id&&isWork(l.createdAt));const avg=rs.length?Math.round(rs.reduce((s,l)=>s+l.react,0)/rs.length):null;return {m,as:as.length,self,fromOpen,lost,avg}});
+  h+=`<div class="grid2b"><section class="panel"><div class="panel-h"><h2>Менеджеры</h2></div><div class="tbl-wrap"><table><thead><tr><th>Менеджер</th><th class="r">Закреплено</th><th class="r">Взяла сама</th><th class="r">Ушло в общий</th><th class="r">Взяла из общего</th><th class="r">Реакция</th></tr></thead><tbody>
+   ${rows.map(r=>`<tr><td>${r.m.short}</td><td class="r num">${r.as}</td><td class="r num">${r.self}</td><td class="r num">${r.lost}</td><td class="r num">${r.fromOpen}</td><td class="r num">${r.avg!=null?r.avg+' мин':'нет'}</td></tr>`).join('')}
+   </tbody></table></div></section>
+   <section class="panel"><div class="panel-h"><h2>Разделы</h2><span class="small muted">диалоги / заявки</span></div><div class="pb">${topSections()}</div></section></div>`;
+  $main.innerHTML=h;
+}
+function hoursChart(){
+  const H=Array(24).fill(0).map(()=>[0,0]);
+  for(const d of DIALOGS){H[d.at.getHours()][isWork(d.at)?0:1]++}
+  const max=Math.max(...H.map(x=>x[0]+x[1]),1), W=480, Ht=170, pl=24, pb=22, bw=(W-pl-6)/24;
+  const y=v=>Ht-pb-(v/max)*(Ht-pb-10);
+  let s=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Обращения по часам"><rect x="${pl+9.5*bw}" y="6" width="${8.5*bw}" height="${Ht-pb-6}" fill="var(--surface)"/>`;
+  [0,Math.ceil(max/2),max].forEach(v=>{s+=`<line x1="${pl}" x2="${W-4}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-5}" y="${y(v)+3}" text-anchor="end">${v}</text>`});
+  H.forEach(([a,b],i)=>{const x=pl+i*bw+2,w=bw-4;if(a)s+=`<rect x="${x}" y="${y(a)}" width="${w}" height="${Ht-pb-y(a)}" rx="2" fill="var(--accent)"/>`;if(b)s+=`<rect x="${x}" y="${y(a+b)}" width="${w}" height="${y(a)-y(a+b)}" rx="2" fill="var(--attn-ink)"/>`;if(i%3===0)s+=`<text x="${x+w/2}" y="${Ht-6}" text-anchor="middle">${i}:00</text>`});
+  return s+'</svg>';
+}
+function daysChart(){
+  const days=[];for(let o=6;o>=0;o--){const d=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()-o);days.push({d,n:DIALOGS.filter(x=>sameDay(x.at,d)).length,l:LEADS.filter(x=>sameDay(x.createdAt,d)).length})}
+  const max=Math.max(...days.map(x=>x.n),1), W=480, Ht=170, pl=24, pb=22, bw=(W-pl-6)/7;
+  const y=v=>Ht-pb-(v/max)*(Ht-pb-10);
+  let s=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Диалоги и заявки по дням">`;
+  [0,Math.ceil(max/2),max].forEach(v=>{s+=`<line x1="${pl}" x2="${W-4}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${pl-5}" y="${y(v)+3}" text-anchor="end">${v}</text>`});
+  days.forEach((x,i)=>{const cx=pl+i*bw+bw/2;s+=`<rect x="${cx-18}" y="${y(x.n)}" width="36" height="${Ht-pb-y(x.n)}" rx="3" fill="var(--surface-2)" stroke="var(--line)"/><rect x="${cx-8}" y="${y(x.l)}" width="16" height="${Ht-pb-y(x.l)}" rx="2" fill="var(--lead-ink)"/><text x="${cx}" y="${Ht-6}" text-anchor="middle">${WD[x.d.getDay()]} ${x.d.getDate()}</text>`});
+  return s+'</svg>';
+}
+function topSections(){
+  const m={};for(const d of DIALOGS){m[d.sec]=m[d.sec]||[0,0];m[d.sec][0]++;if(d.lead)m[d.sec][1]++}
+  const arr=Object.entries(m).sort((a,b)=>b[1][0]-a[1][0]).slice(0,8), max=arr[0]?arr[0][1][0]:1;
+  return arr.map(([c,[n,l]])=>`<div class="hbar"><span>${esc(secShort(c))}</span><div class="bar"><i style="width:${n/max*100}%"></i></div><span class="num" style="text-align:right">${n} / ${l}</span></div>`).join('');
+}
+
+/* ================= МЕНЕДЖЕРЫ И ПРАВИЛА ================= */
+function renderRouting(){
+  const none=SECTIONS.filter(s=>!s.m), hand=SECTIONS.filter(s=>s.h);
+  let h=top('Менеджеры и правила','Закрепление менеджеров за разделами взято с карточек товаров на 4-7.ru. Параметры с пометкой «уточнить» ждут подтверждения Андрея.');
+  h+=`<div class="params">
+   <div class="param"><span class="metric">Время на ответ закреплённому (T1)</span><span class="v">${T1_DEFAULT} мин</span><span class="s"><span class="badge b-attn">уточнить</span> после этого заявка открыта всем</span></div>
+   <div class="param"><span class="metric">Рабочие часы</span><span class="v">${hoursText}</span><span class="s"><span class="badge b-attn">уточнить</span> на сайте два варианта режима склада</span></div>
+   <div class="param"><span class="metric">Лимит X по группам</span><span class="v">не задан</span><span class="s"><span class="badge b-attn">уточнить</span> выше лимита сразу менеджеру</span></div>
+   <div class="param"><span class="metric">Анти-прощупывание</span><span class="v">+20% в одной сессии</span><span class="s">повтор того же товара с ростом объёма → менеджеру</span></div></div>`;
+  h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Менеджеры</h2><span class="small muted">по КП их пять, на сайте нашли четырёх</span></div>
+   ${MANAGERS.map(m=>{const ss=SECTIONS.filter(s=>s.m===m.id);return `<div class="mgr"><span class="av">${m.ini}</span><div style="min-width:0"><b>${m.name}</b><details><summary>${ss.length} разделов, ${ss.reduce((a,s)=>a+s.n,0)} товаров · показать</summary><ul>${ss.map(s=>`<li>${esc(secShort(s.c))}${s.h?' (сразу на менеджера)':''}</li>`).join('')}</ul></details></div><span class="small muted">TG: уточнить</span></div>`}).join('')}
+   <div class="mgr"><span class="av q">?</span><div><b>Пятый менеджер</b><div class="small muted">На карточках сайта не встречается. Нужны имя и Telegram.</div></div><span class="badge b-attn">уточнить</span></div>
+   </section>
+   <section class="panel"><div class="panel-h"><h2>Когда ИИ передаёт заявку</h2></div><div class="tbl-wrap"><table class="rules"><thead><tr><th>Ситуация</th><th>Рабочее время</th><th>Нерабочее</th></tr></thead><tbody>
+    <tr><td>Клиент заполнил форму (имя и телефон)</td><td>заявка закреплённому, через T1 всем</td><td>заявка с пометкой «ждёт менеджера»</td></tr>
+    <tr><td>Раздел из списка «сразу на менеджера»</td><td>соединить с менеджером</td><td>собрать контакт, отправить заявку</td></tr>
+    <tr><td>Товар «по заказу» (нет цены или остатка)</td><td>соединить с менеджером</td><td>собрать контакт, отправить заявку</td></tr>
+    <tr><td>Не хватает остатка: до 20% «чуть не хватает», больше «не хватает»</td><td colspan="2">предложить передать менеджеру</td></tr>
+    <tr><td>Объём больше лимита X или повтор +20%</td><td colspan="2">к менеджеру; отказ дать контакт пишется в журнал</td></tr>
+    <tr><td>Точный остаток</td><td colspan="2">не называется, только «есть / чуть не хватает / нет»</td></tr>
+   </tbody></table></div></section></div>`;
+  h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Разделы без менеджера на сайте</h2><span class="badge b-attn">${none.length}</span></div>
+     <div class="note" style="border-top:0">Заявки из этих разделов сейчас сразу уходят всем в группу. Нужно закрепить менеджера.</div>
+     <div class="taglist">${none.map(s=>`<span class="chip">${esc(secShort(s.c))}</span>`).join('')}</div></section>
+   <section class="panel"><div class="panel-h"><h2>Сразу на менеджера</h2><span class="badge b-info">${hand.length} разделов</span></div>
+     <div class="note" style="border-top:0">ИИ по ним не консультирует. Список согласован с Андреем: фонтаны и МАФы, кортен-сталь целиком, клеи, очистители, облицовочная плитка, дикий камень, галька на сетке, брусчатка оптом, товары со скидкой, бетонная плитка, габионы.</div>
+     <div class="taglist">${hand.map(s=>`<span class="chip">${esc(secShort(s.c))}</span>`).join('')}</div></section></div>`;
+  h+=`<section class="panel"><div class="panel-h"><h2>Открытые вопросы к клиенту</h2></div><ol class="qs">
+    <li><b>Один товар в двух разделах с разными менеджерами.</b> 22 плитняка лежат и в «Песчанике» (Жиляева), и в «Плитняках» (Перетятько), сланцевые ещё и в «Сланце» (Бирючева). Предлагаем: заявку получает менеджер раздела, с которого пришёл клиент.</li>
+    <li><b>Как закреплённый получает заявку первым.</b> Вариант в прототипе: одна группа, бот отмечает закреплённого, первые T1 минут «Беру» доступна только ему. Альтернатива: сначала личное сообщение менеджеру, потом группа.</li>
+    <li><b>Живой перехват или перезвон.</b> В рабочее время менеджер подключается к чату на сайте или перезванивает по телефону из заявки.</li>
+    <li><b>Значение T1, рабочие часы, лимиты X по группам.</b></li>
+    <li><b>Пятый менеджер и Telegram-аккаунты всех пяти.</b></li>
+    <li><b>Менеджеры для ${none.length} разделов без закрепления.</b></li>
+    <li><b>Персональные данные.</b> Имя и телефон клиента хранятся только в заявке в Telegram, в базе бота не сохраняются. В форму бота добавляем согласие на обработку данных.</li>
+  </ol></section>`;
+  $main.innerHTML=h;
+}
+
+/* ================= РОУТИНГ И СОБЫТИЯ ================= */
+const ROUTES={dialogs:renderDialogs,leads:renderLeads,'route-test':renderSim,analytics:renderAnalytics,routing:renderRouting};
+function render(){
+  (ROUTES[S.route]||renderDialogs)();
+  document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.route===S.route?'page':'false'));
+  const q=LEADS.filter(l=>l.status!=='taken').length; const c=document.getElementById('navCnt'); c.hidden=!q; c.textContent=q;
+}
+function go(r){ if(location.hash.slice(1)!==r) location.hash=r; else {S.route=r;render()} }
+window.addEventListener('hashchange',()=>{const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';clearInterval(SIM.timer);render();window.scrollTo(0,0)});
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,tr,[data-openlead]'); if(!t) return;
+  if(t.dataset.route){go(t.dataset.route);return}
+  if(t.dataset.dsub){S.dsub=t.dataset.dsub;try{localStorage.setItem('pult47',JSON.stringify({dsub:S.dsub}))}catch(_){};render();return}
+  if(t.dataset.dlg){S.dId=t.dataset.dlg;S.mobile='chat';render();return}
+  if(t.hasAttribute('data-back')){S.mobile='list';render();return}
+  if(t.dataset.openlead){S.lId=+t.dataset.openlead;S.lFilter='all';go('leads');return}
+  if(t.dataset.lead){S.lId=+t.dataset.lead;render();return}
+  if(t.dataset.lf){S.lFilter=t.dataset.lf;render();return}
+  if(t.dataset.opendlg){S.dId=t.dataset.opendlg;S.dsub='messages';S.fStatus='all';S.fSec='all';S.fMgr='all';S.q='';S.mobile='chat';go('dialogs');return}
+  if(t.hasAttribute('data-simall')){simRun(true);return}
+});
+document.addEventListener('change',e=>{
+  const id=e.target.id;
+  if(id==='fStatus'){S.fStatus=e.target.value;render()} else if(id==='fSec'){S.fSec=e.target.value;render()} else if(id==='fMgr'){S.fMgr=e.target.value;render()}
+  else if(id==='simSec'){SIM.sec=e.target.value;SIM.step=-1;SIM.L=null;clearInterval(SIM.timer);render()}
+  else if(id==='simT1'){SIM.T1=+e.target.value;SIM.step=-1;SIM.L=null;render()}
+  else if(e.target.name==='simTime'){SIM.time=e.target.value;SIM.step=-1;SIM.L=null;render()}
+  else if(e.target.name==='simBeh'){SIM.beh=e.target.value;SIM.step=-1;SIM.L=null;render()}
+});
+let qTimer;
+document.addEventListener('input',e=>{if(e.target.id==='q'){clearTimeout(qTimer);const v=e.target.value;qTimer=setTimeout(()=>{S.q=v;render();const el=document.getElementById('q');if(el){el.focus();el.setSelectionRange(v.length,v.length)}},250)}});
+document.addEventListener('submit',e=>{if(e.target.id==='simForm'){e.preventDefault();simRun(false)}});
+(function init(){const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';render()})();
+</script>
+
+</body>
+</html>
