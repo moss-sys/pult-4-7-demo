@@ -23,6 +23,7 @@
   --font:"Inter","SF Pro Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
   --r-sm:6px; --r-md:8px; --r-lg:14px; --pill:50px;
+  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0e1014; --surface:#15181d; --surface-2:#1b1f26; --line:#272c35; --ink:#eceef2; --muted:#9aa3b0; --faint:#6b7280;
@@ -30,7 +31,7 @@
   --lead:#1e2a47; --lead-ink:#a9c0ff; --done:#12302b; --done-ink:#5eead4; --ok-ink:#4ade80;
   --attn:#3a2d10; --attn-ink:#fcd34d; --err:#3d1b1b; --err-ink:#fca5a5; --info:#1c2129; --info-ink:#cbd2dc;
   --navy:#e9edf3; --on-navy:#0e1014;
-  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55);
+  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55); --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa3b0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   color-scheme:dark;}}
 :root[data-theme="dark"]{
   --bg:#0e1014; --surface:#15181d; --surface-2:#1b1f26; --line:#272c35; --ink:#eceef2; --muted:#9aa3b0; --faint:#6b7280;
@@ -38,7 +39,7 @@
   --lead:#1e2a47; --lead-ink:#a9c0ff; --done:#12302b; --done-ink:#5eead4; --ok-ink:#4ade80;
   --attn:#3a2d10; --attn-ink:#fcd34d; --err:#3d1b1b; --err-ink:#fca5a5; --info:#1c2129; --info-ink:#cbd2dc;
   --navy:#e9edf3; --on-navy:#0e1014;
-  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55);
+  --tg-bg:#11151a; --tg-bubble:#1c2128; --tg-btn:#232a33; --tg-name:#8fb0ff; --tg-svc:rgba(233,237,243,.55); --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa3b0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   color-scheme:dark;}
 
 *{box-sizing:border-box}
@@ -96,7 +97,7 @@ a{color:var(--accent-ink)}
 .dlg{display:grid;grid-template-columns:320px minmax(0,1fr) 290px;gap:12px;min-height:640px}
 .list{display:flex;flex-direction:column;min-height:0}
 .filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px;border-bottom:1px solid var(--line)}
-.filters select,.filters input,.field select,.field input{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
+.filters select,.filters input,.field select,.field input{width:100%;min-width:0;border:1px solid var(--line);background-color:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
 .filters .search{grid-column:1/-1}
 .rows{overflow:auto;max-height:720px}
 .row{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:10px 12px}
@@ -299,13 +300,13 @@ td.r,th.r{text-align:right}
 .list-h .seg button{padding:4px 9px}
 .seg .n{opacity:.6;font-variant-numeric:tabular-nums}
 .filters2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
-.filters2 select,.list-h input,.tb select{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
+.filters2 select,.list-h input,.tb select{width:100%;min-width:0;border:1px solid var(--line);background-color:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
 .row{gap:3px;padding:9px 12px}
 .row-b{display:flex;gap:8px;align-items:center;min-width:0}
 .row-b p{flex:1;min-width:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dlg{grid-template-columns:300px minmax(0,1fr) 260px}
 .sect-h{display:flex;gap:8px;align-items:center;justify-content:space-between}.sect-h b{white-space:nowrap}
-.list-h .seg{flex-wrap:nowrap}
+.list-h .seg{flex-wrap:nowrap;overflow-x:auto}.list-h .seg button{white-space:nowrap;padding:4px 8px;font-size:11.5px}
 .cnt-s{font-size:11px;font-weight:600;background:var(--surface-2);border-radius:var(--pill);padding:1px 7px;color:var(--muted)}
 .strip{grid-template-columns:repeat(4,minmax(0,1fr))}
 .nw{white-space:nowrap}
@@ -336,6 +337,10 @@ tbody tr.static:hover td{background:none}
 @media (max-width:1080px){.sim2{grid-template-columns:minmax(0,1fr)}.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:900px){.dlg{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:560px){.filters2,.grp{grid-template-columns:minmax(0,1fr)}.tb .field:first-child{width:100%}.tb .seg{flex-wrap:wrap}.tb .actions{margin-left:0}}
+
+/* свои стрелки у выпадающих списков: одинаково во всех браузерах, с отступом от края */
+select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:var(--chev);background-repeat:no-repeat;background-position:right 10px center;background-size:14px 14px;padding-right:32px!important;cursor:pointer;text-overflow:ellipsis}
+select::-ms-expand{display:none}
 </style>
 </head>
 <body>
@@ -694,8 +699,8 @@ function renderDialogs(){
   let h=pageTop('Диалоги');
   h+=`<div class="dlg" data-mobile="${S.mobile}"><section class="panel list" aria-label="Список диалогов"><div class="list-h">
     ${segHtml('fs',[['all','Все',cnt('all')],['ai','ИИ',cnt('ai')],['lead','Заявка',cnt('lead')],['done','Закрыт',cnt('done')]],S.fStatus)}
-    <div class="filters2"><select id="fSec" aria-label="Раздел"><option value="all">Все разделы</option>${secs.map(s=>`<option value="${esc(s)}">${esc(secShort(s))}</option>`).join('')}</select>
-      <select id="fMgr" aria-label="Менеджер"><option value="all">Все менеджеры</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="none">Без менеджера</option></select></div>
+    <div class="filters2"><select id="fSec" aria-label="Раздел"><option value="all">Разделы</option>${secs.map(s=>`<option value="${esc(s)}">${esc(secShort(s))}</option>`).join('')}</select>
+      <select id="fMgr" aria-label="Менеджер"><option value="all">Менеджеры</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="none">Без менеджера</option></select></div>
     <input id="q" type="search" placeholder="Поиск по товару или клиенту" value="${esc(S.q)}" aria-label="Поиск">
    </div><div class="rows">${list.length?list.map(x=>{
       const first=x.msgs.find(m=>m.who==='client');
@@ -887,7 +892,7 @@ function topSections(){
 const ROOTS=[['Фонтаны и МАФЫ','Фонтаны и МАФы'],['Камень для мощения','Камень для мощения'],['Природный камень','Природный камень'],['Материалы для ЛД','Материалы для ЛД'],['Облицовочная плитка','Облицовочная плитка']];
 function groupSecs(arr){
   const g={};
-  for(const s of arr){const r=ROOTS.find(([p])=>s.c.startsWith(p))||[s.c,s.c];let leaf=s.c.slice(r[0].length).trim()||r[1];leaf=leaf.charAt(0).toLowerCase()+leaf.slice(1);(g[r[1]]=g[r[1]]||[]).push(leaf)}
+  for(const s of arr){const r=ROOTS.find(([p])=>s.c.startsWith(p))||[s.c,s.c];let leaf=s.c.slice(r[0].length).trim()||r[1];leaf=leaf.split(' ').filter((w,i,a)=>!i||w.toLowerCase()!==a[i-1].toLowerCase()).join(' ').replace(/(^|\s)([А-ЯЁ])(?=[а-яё])/g,(m,sp,c)=>sp+c.toLowerCase());(g[r[1]]=g[r[1]]||[]).push(leaf)}
   return `<dl class="grp">${Object.entries(g).map(([k,v])=>`<dt>${k} <span class="muted">${v.length}</span></dt><dd>${esc(v.join(', '))}</dd>`).join('')}</dl>`;
 }
 const QUESTIONS=[
