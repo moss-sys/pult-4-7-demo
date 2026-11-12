@@ -292,6 +292,50 @@ td.r,th.r{text-align:right}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 @keyframes pop{from{transform:translateY(4px);opacity:.3}to{transform:none;opacity:1}}
 .pop{animation:pop .25s ease-out}
+
+/* v2: меньше текста, вкладки вместо простыней */
+.top{align-items:center}
+.list-h{display:flex;flex-direction:column;gap:8px;padding:10px;border-bottom:1px solid var(--line)}
+.list-h .seg button{padding:4px 9px}
+.seg .n{opacity:.6;font-variant-numeric:tabular-nums}
+.filters2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}
+.filters2 select,.list-h input,.tb select{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font)}
+.row{gap:3px;padding:9px 12px}
+.row-b{display:flex;gap:8px;align-items:center;min-width:0}
+.row-b p{flex:1;min-width:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dlg{grid-template-columns:300px minmax(0,1fr) 260px}
+.sect-h{display:flex;gap:8px;align-items:center;justify-content:space-between}.sect-h b{white-space:nowrap}
+.list-h .seg{flex-wrap:nowrap}
+.cnt-s{font-size:11px;font-weight:600;background:var(--surface-2);border-radius:var(--pill);padding:1px 7px;color:var(--muted)}
+.strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+.nw{white-space:nowrap}
+.cl{display:flex;gap:6px;align-items:baseline;min-width:0;max-width:340px}
+.cl b{flex:none}.cl .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.side-panel .subnav{padding:0 10px}
+.tg.bare{border:0;border-radius:0 0 var(--r-lg) var(--r-lg)}
+.tg.bare .tg-h{display:none}
+.tb{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-start;padding:14px}
+.tb .field:first-child{width:220px}.tb .seg{flex-wrap:nowrap}
+.tb .actions{display:flex;gap:6px;align-self:center;margin-left:auto}
+.sim2{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:12px;align-items:start}
+.sim-body{display:flex;flex-direction:column;gap:12px}
+.grp{margin:0;padding:12px 14px;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 16px;font-size:12.5px}
+.grp dt{font-weight:600;white-space:nowrap}.grp dt .muted{font-weight:400}
+.grp dd{margin:0;color:var(--muted)}
+.mgr-b{min-width:0;display:flex;flex-direction:column;gap:2px}
+.mgr details .grp{padding:6px 0 2px}
+.qs details summary{cursor:pointer;list-style:none}
+.qs details summary::-webkit-details-marker{display:none}
+.qs details p{margin:4px 0 0;color:var(--muted);font-size:12.5px;max-width:75ch}
+.params .badge{align-self:flex-start}
+tbody tr.static{cursor:default}
+tbody tr.static:hover td{background:none}
+.r{text-align:right}
+.chip.demo{cursor:help}
+@media (max-width:1280px){.dlg{grid-template-columns:280px minmax(0,1fr)}}
+@media (max-width:1080px){.sim2{grid-template-columns:minmax(0,1fr)}.strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.dlg{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.filters2,.grp{grid-template-columns:minmax(0,1fr)}.tb .field:first-child{width:100%}.tb .seg{flex-wrap:wrap}.tb .actions{margin-left:0}}
 </style>
 </head>
 <body>
@@ -302,15 +346,12 @@ td.r,th.r{text-align:right}
     <div class="brand"><b>Четыре Седьмых</b><span>ИИ-менеджер · 4-7.ru</span></div>
     <nav class="nav" id="nav" aria-label="Разделы">
       <button data-route="dialogs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Диалоги</button>
-      <button data-route="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Заявки в Telegram<span class="cnt" id="navCnt" hidden></span></button>
-      <button data-route="route-test"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M6 16V9a4 4 0 0 1 4-4h5"/></svg>Проверка маршрута</button>
+      <button data-route="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Заявки<span class="cnt" id="navCnt" hidden></span></button>
+      <button data-route="route-test"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M6 16V9a4 4 0 0 1 4-4h5"/></svg>Тест маршрута</button>
       <button data-route="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>Аналитика</button>
-      <button data-route="routing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 5.5M18 14c2 .6 3 2.6 3 6"/></svg>Менеджеры и правила</button>
+      <button data-route="routing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 5.5M18 14c2 .6 3 2.6 3 6"/></svg>Настройки</button>
     </nav>
-    <div class="side-foot">
-      <span class="chip demo">Демо-данные</span>
-      <span>Каталог, цены, остатки и закрепление менеджеров взяты с сайта и из 1С. Клиенты и переписка сгенерированы.</span>
-    </div>
+    <div class="side-foot"><span class="chip demo" title="Каталог, цены, остатки и закрепление менеджеров взяты с сайта и из 1С. Клиенты и переписка сгенерированы.">Демо-данные</span></div>
   </aside>
   <main class="main" id="main"></main>
 </div>
@@ -603,22 +644,30 @@ LEADS.forEach((l,i)=>{const old=l.no, nw=1031+i; l.no=nw; for(const m of DIALOGS
 LEADS.reverse();
 const DBY=Object.fromEntries(DIALOGS.map(d=>[d.id,d]));
 const REASON={cta:'Клиент оставил контакт',stock:'Не хватает остатка',order:'Товар под заказ',section:'Раздел на менеджера',large:'Крупный объём'};
-const LSTATUS={waiting:['Ждёт закреплённого','b-attn'],open:['Открыта всем','b-attn'],taken:['Взята','b-done'],nottaken:['Не взята','b-err']};
+const LSTATUS={waiting:['Ждёт ответа','b-attn'],open:['Открыта всем','b-attn'],taken:['Взята','b-done'],nottaken:['Не взята','b-err']};
 
 /* ================= СОСТОЯНИЕ ================= */
-const S={route:'dialogs', dsub:'messages', dId:DIALOGS[0].id, fStatus:'all', fSec:'all', fMgr:'all', q:'', mobile:'list',
-  lId:LEADS[0]?.no, lFilter:'all'};
-try{const saved=JSON.parse(localStorage.getItem('pult47')||'{}'); if(saved.dsub) S.dsub=saved.dsub;}catch(e){}
+const S={route:'dialogs', dId:DIALOGS[0].id, fStatus:'all', fSec:'all', fMgr:'all', q:'', mobile:'list',
+  lId:LEADS[0]?.no, lFilter:'all', lTab:'tg', aTab:'overview', rTab:'managers'};
 
-/* ================= РЕНДЕР: общие куски ================= */
+/* ================= ОБЩИЕ КУСКИ ================= */
 const $main=document.getElementById('main');
-function pageTop(title,sub,right=''){const s=addMin(NOW,-6*1440);return `<div class="top"><div><h1>${title}</h1><p>${sub}</p></div><div class="top-r">${right}<span class="chip">7 дней · ${s.getDate()}-${NOW.getDate()} ${MON[NOW.getMonth()]}</span><span class="chip demo">Демо-данные</span></div></div>`}
-function statusBadge(d){
-  if(d.status==='ai') return '<span class="badge b-ai"><span class="dot"></span>ИИ ведёт</span>';
-  if(d.status==='lead'){const [t,c]=LSTATUS[d.lead.status];return `<span class="badge b-lead">Заявка №${d.lead.no}</span><span class="badge ${c}">${t}</span>`}
-  return '<span class="badge b-info">Завершён ИИ</span>';
+const PERIOD=(()=>{const s=addMin(NOW,-6*1440);return `${s.getDate()}-${NOW.getDate()} ${MON[NOW.getMonth()]}`})();
+function pageTop(title,extra=''){return `<div class="top"><h1>${title}</h1><div class="top-r">${extra}<span class="chip">7 дней · ${PERIOD}</span></div></div>`}
+function tabsHtml(key,items){return `<div class="subnav" role="tablist">${items.map(([k,t,b])=>`<button role="tab" data-tab="${key}:${k}" aria-selected="${S[key]===k}">${t}${b!=null?` <span class="cnt-s">${b}</span>`:''}</button>`).join('')}</div>`}
+function segHtml(attr,items,cur){return `<div class="seg" role="group">${items.map(([k,t,n])=>`<button type="button" data-${attr}="${k}" aria-pressed="${cur===k}">${t}${n!=null?` <span class="n">${n}</span>`:''}</button>`).join('')}</div>`}
+const shortWhen=d=>sameDay(d,NOW)?hm(d):dayLabel(d)==='вчера'?'вчера '+hm(d):`${d.getDate()} ${MON[d.getMonth()]} ${hm(d)}`;
+const sur=id=>id?MID[id].short.split(' ')[0]:'нет';
+function leadBadge(L){const [t,c]=LSTATUS[L.status];return `<span class="badge ${c}">${t}</span>`}
+function routeSummary(L){
+  if(L.status==='taken') return `Взяла ${MID[L.takenBy].short} в ${hm(L.takenAt)}, через ${L.react} мин${L.viaOpen?' (из общего чата)':''}`;
+  if(L.status==='waiting') return `Ждёт ${L.assigned?MID[L.assigned].short:'менеджера'} до ${hm(L.deadline||L.createdAt)}`;
+  if(L.status==='open') return 'Открыта всем, пока никто не взял';
+  return isWork(L.createdAt)?'Никто не взял, висит с пометкой «не взято»':`Пришла в нерабочее время, ждёт ${hm(nextWorkStart(L.createdAt))}`;
 }
-function mgrName(id){return id?MID[id].short:'не закреплён'}
+function renderTimeline(ev,upTo=Infinity){
+  return `<ol class="tl">${ev.map((e,i)=>`<li class="k-${e.k}${i>upTo?' future':''}"><span class="tt">${hm(e.t)}</span><span class="pt"></span><span class="tx">${e.text}</span></li>`).join('')}</ol>`;
+}
 
 /* ================= ДИАЛОГИ ================= */
 function filteredDialogs(){
@@ -630,76 +679,59 @@ function filteredDialogs(){
     return true;
   });
 }
+function rowTag(x){
+  if(x.status==='ai') return '<span class="badge b-ai"><span class="dot"></span>ИИ ведёт</span>';
+  if(x.lead) return leadBadge(x.lead);
+  if(x.flags.includes('probe')) return '<span class="badge b-err">прощупывание</span>';
+  return '';
+}
 function renderDialogs(){
-  const queue=LEADS.filter(l=>l.status!=='taken');
   const list=filteredDialogs();
   if(!list.find(d=>d.id===S.dId)&&list.length) S.dId=list[0].id;
   const d=DBY[S.dId];
-  const secsUsed=[...new Set(DIALOGS.map(x=>x.sec))].sort();
+  const secs=[...new Set(DIALOGS.map(x=>x.sec))].sort((a,b)=>secShort(a).localeCompare(secShort(b),'ru'));
   const cnt=k=>DIALOGS.filter(x=>k==='all'||x.status===k).length;
-  let html=pageTop('Диалоги','Вся переписка ИИ-менеджера с посетителями сайта: что спросили, что посчитал бот и когда передал заявку менеджеру.');
-  html+=`<div class="subnav" role="tablist"><button role="tab" data-dsub="messages" aria-selected="${S.dsub==='messages'}">Сообщения</button><button role="tab" data-dsub="queue" aria-selected="${S.dsub==='queue'}">Очередь ${queue.length?`<span class="badge b-attn">${queue.length}</span>`:''}</button></div>`;
-  if(S.dsub==='queue'){ html+=renderQueue(queue); $main.innerHTML=html; return; }
-  html+=`<div class="dlg" data-mobile="${S.mobile}">
-   <section class="panel list" aria-label="Список диалогов">
-    <div class="filters">
-      <select id="fStatus" aria-label="Статус"><option value="all">Статус: все (${cnt('all')})</option><option value="ai">ИИ ведёт (${cnt('ai')})</option><option value="lead">Передан менеджеру (${cnt('lead')})</option><option value="done">Завершён ИИ (${cnt('done')})</option></select>
-      <select id="fSec" aria-label="Раздел"><option value="all">Раздел: все</option>${secsUsed.map(s=>`<option value="${esc(s)}">${esc(secShort(s))}</option>`).join('')}</select>
-      <select id="fMgr" aria-label="Менеджер"><option value="all">Менеджер: все</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="none">Не закреплён</option></select>
-      <input id="q" class="search" type="search" placeholder="Поиск по товару, клиенту, тексту" value="${esc(S.q)}">
-    </div>
-    <div class="rows">${list.length?list.map(x=>{
+  let h=pageTop('Диалоги');
+  h+=`<div class="dlg" data-mobile="${S.mobile}"><section class="panel list" aria-label="Список диалогов"><div class="list-h">
+    ${segHtml('fs',[['all','Все',cnt('all')],['ai','ИИ',cnt('ai')],['lead','Заявка',cnt('lead')],['done','Закрыт',cnt('done')]],S.fStatus)}
+    <div class="filters2"><select id="fSec" aria-label="Раздел"><option value="all">Все разделы</option>${secs.map(s=>`<option value="${esc(s)}">${esc(secShort(s))}</option>`).join('')}</select>
+      <select id="fMgr" aria-label="Менеджер"><option value="all">Все менеджеры</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="none">Без менеджера</option></select></div>
+    <input id="q" type="search" placeholder="Поиск по товару или клиенту" value="${esc(S.q)}" aria-label="Поиск">
+   </div><div class="rows">${list.length?list.map(x=>{
       const first=x.msgs.find(m=>m.who==='client');
-      return `<button class="row" data-dlg="${x.id}" aria-current="${x.id===S.dId}">
-        <div class="row-t"><b>${esc(x.client)}</b><span class="badge b-info">Сайт</span><span class="time">${dayLabel(x.last)==='сегодня'?hm(x.last):dayLabel(x.last).replace(/^.., /,'')}</span></div>
-        <p>${esc(first?first.text:'')}</p>
-        <div class="tags">${statusBadge(x)}${x.flags.includes('probe')?'<span class="badge b-err">Прощупывание</span>':''}</div></button>`}).join(''):'<div class="empty">Под фильтр ничего не попало</div>'}</div>
-   </section>`;
-  html+= d? renderChat(d)+renderInfo(d) : '<section class="panel chat"><div class="empty">Выберите диалог</div></section>';
-  html+='</div>';
-  $main.innerHTML=html;
-  document.getElementById('fStatus').value=S.fStatus; document.getElementById('fSec').value=S.fSec; document.getElementById('fMgr').value=S.fMgr;
+      const tm=dayLabel(x.last)==='сегодня'?hm(x.last):dayLabel(x.last).replace(/^.., /,'');
+      return `<button class="row" data-dlg="${x.id}" aria-current="${x.id===S.dId}"><div class="row-t"><b>${esc(x.client)}</b><span class="time">${tm}</span></div>
+        <div class="row-b"><p>${esc(first?first.text:'')}</p>${rowTag(x)}</div></button>`}).join(''):'<div class="empty">Ничего не найдено</div>'}</div></section>`;
+  h+= d? renderChat(d)+renderInfo(d) : '<section class="panel chat"><div class="empty">Выберите диалог</div></section>';
+  $main.innerHTML=h+'</div>';
+  document.getElementById('fSec').value=S.fSec; document.getElementById('fMgr').value=S.fMgr;
   const box=document.querySelector('.msgs'); if(box) box.scrollTop=box.scrollHeight;
 }
 function renderChat(d){
   const msgs=d.msgs.map(m=>{
-    if(m.who==='client') return `<div class="m client"><div class="bub">${esc(m.text)}</div><div class="meta">${esc(d.client)} · ${hm(m.t)}</div></div>`;
-    if(m.who==='bot') return `<div class="m bot"><div class="bub">${esc(m.text)}</div><div class="meta">ИИ-менеджер · ${hm(m.t)}</div></div>`;
+    if(m.who==='client') return `<div class="m client"><div class="bub">${esc(m.text)}</div><div class="meta">${hm(m.t)}</div></div>`;
+    if(m.who==='bot') return `<div class="m bot"><div class="bub">${esc(m.text)}</div><div class="meta">ИИ · ${hm(m.t)}</div></div>`;
     if(m.who==='cards') return `<div class="m bot"><div class="cards">${m.items.map(i=>`<div class="pcard"><b>${esc(i.n)}</b><span class="pr">${esc(i.p)}</span><span>${esc(i.f)}</span></div>`).join('')}</div></div>`;
-    if(m.who==='calc') return `<div class="m bot"><div class="calc"><div class="ct">Расчёт: ${esc(m.title)}</div><dl>${m.rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}<dt class="tot">Итого</dt><dd class="tot">${esc(m.total)}</dd></dl></div></div>`;
+    if(m.who==='calc') return `<div class="m bot"><div class="calc"><div class="ct">${esc(m.title)}</div><dl>${m.rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}<dt class="tot">Итого</dt><dd class="tot">${esc(m.total)}</dd></dl></div></div>`;
     const cls={lead:'b-lead',attn:'b-attn',err:'b-err',info:'b-info',done:'b-done'}[m.tone];
-    return `<div class="ev ${cls}"><span class="dot"></span>${esc(m.text)} · ${hm(m.t)}</div>`;
+    return `<div class="ev ${cls}">${esc(m.text)}</div>`;
   }).join('');
-  return `<section class="panel chat" aria-label="Переписка">
-    <div class="chat-h"><div class="who"><button class="btn ghost back" data-back>Назад к списку</button><b>${esc(d.client)}</b><span>Сайт · пришёл со страницы «${esc(d.page)}» · ${when(d.at)}</span></div>
-      <div class="top-r">${statusBadge(d)}</div></div>
-    <div class="msgs">${msgs}</div>
-    <div class="chat-f">${d.status==='ai'?'<span class="badge b-ai"><span class="dot"></span>ИИ сейчас в диалоге</span>':d.status==='lead'?'Диалог передан менеджеру через Telegram. Ответ клиенту идёт по телефону.':'ИИ ответил сам, менеджер не понадобился.'}</div>
-  </section>`;
+  return `<section class="panel chat" aria-label="Переписка"><div class="chat-h"><div class="who"><button class="btn ghost back" data-back>Назад</button><b>${esc(d.client)}</b></div>
+     <div class="top-r">${d.lead?`<span class="badge b-lead">Заявка №${d.lead.no}</span>`:''}${rowTag(d)||'<span class="badge b-info">Завершён</span>'}</div></div>
+    <div class="msgs">${msgs}</div></section>`;
 }
 function renderInfo(d){
-  const s=SEC[d.sec]; const L=d.lead;
-  let h=`<section class="panel info" aria-label="Карточка диалога"><div class="panel-h"><h3>Карточка</h3></div>
-   <dl class="kv"><dt>Раздел</dt><dd>${esc(secShort(d.sec))}</dd><dt>Закреплён</dt><dd>${s&&s.m?MID[s.m].short:'<span class="badge b-attn">нет на сайте</span>'}</dd>
-   <dt>Начат</dt><dd>${when(d.at)}</dd><dt>Сообщений</dt><dd class="num">${d.msgs.filter(m=>m.who==='client'||m.who==='bot').length}</dd><dt>Расход ИИ</dt><dd class="num">≈ ${rub(d.costRub)}</dd></dl>`;
-  if(L){
-    h+=`<div class="sect"><div class="eyebrow">Заявка №${L.no}</div><div>${LSTATUS[L.status]?`<span class="badge ${LSTATUS[L.status][1]}">${LSTATUS[L.status][0]}</span>`:''} <span class="badge b-info">${REASON[L.reason]}</span></div>
-      ${L.calc?`<div class="small">${esc(L.calc)}</div>`:''}
-      ${renderTimeline(L.events)}
-      <button class="btn" data-openlead="${L.no}">Открыть в заявках</button></div>`;
-  } else if(d.flags.includes('probe')){
-    h+=`<div class="sect"><div class="eyebrow">Защита данных</div><div class="small">Клиент спрашивал точный остаток и цену на крупный объём, контакт оставить отказался. ИИ назвал только статус наличия.</div></div>`;
-  }
+  const s=SEC[d.sec], L=d.lead;
+  let h=`<section class="panel info" aria-label="Карточка диалога"><dl class="kv">
+    <dt>Раздел</dt><dd>${esc(secShort(d.sec))}</dd>
+    <dt>Менеджер</dt><dd>${s&&s.m?MID[s.m].short:'<span class="badge b-attn">не закреплён</span>'}</dd>
+    <dt>Страница</dt><dd>${esc(d.page)}</dd>
+    <dt>Начат</dt><dd>${when(d.at)}</dd></dl>`;
+  if(L) h+=`<div class="sect"><div class="sect-h"><b>Заявка №${L.no}</b>${leadBadge(L)}</div>
+     ${L.calc?`<div class="small muted">${esc(L.calc)}</div>`:''}<div class="small">${routeSummary(L)}</div>
+     <button class="btn" data-openlead="${L.no}">Маршрут и Telegram</button></div>`;
+  else if(d.flags.includes('probe')) h+=`<div class="sect"><div class="sect-h"><b>Защита данных</b><span class="badge b-err">отказ от контакта</span></div><div class="small muted">Спрашивал точный остаток на крупный объём. ИИ назвал только статус наличия.</div></div>`;
   return h+'</section>';
-}
-function renderTimeline(ev,upTo=Infinity){
-  return `<ol class="tl">${ev.map((e,i)=>`<li class="k-${e.k}${i>upTo?' future':''}"><span class="tt">${hm(e.t)}</span><span class="pt"></span><span class="tx">${e.text}</span></li>`).join('')}</ol>`;
-}
-function renderQueue(q){
-  if(!q.length) return '<div class="panel empty">Очередь пуста: все заявки взяты</div>';
-  return `<div class="panel"><div class="panel-h"><h2>Ждут менеджера сейчас</h2><span class="small muted">Заявки, которые ещё никто не взял</span></div><div class="tbl-wrap"><table><thead><tr><th>№</th><th>Создана</th><th>Клиент</th><th>Запрос</th><th>Закреплена</th><th>Статус</th></tr></thead><tbody>
-   ${q.map(l=>`<tr data-openlead="${l.no}"><td class="num">${l.no}</td><td>${when(l.createdAt)}</td><td>${esc(l.client)}</td><td>${esc(l.request)}</td><td>${mgrName(l.assigned)}</td><td><span class="badge ${LSTATUS[l.status][1]}">${LSTATUS[l.status][0]}</span></td></tr>`).join('')}
-  </tbody></table></div></div>`;
 }
 
 /* ================= ЗАЯВКИ + TELEGRAM ================= */
@@ -710,91 +742,79 @@ function tgLeadText(L){
 <b>Запрос:</b> ${esc(L.request)}${L.calc?`
 <b>Расчёт:</b> ${esc(L.calc)}`:''}${L.stock?`
 <b>Наличие:</b> ${esc(L.stock)}`:''}
-<b>Причина:</b> ${REASON[L.reason].toLowerCase()}
-<b>Страница:</b> ${esc(L.page)}
-${as?`<b>Закреплена:</b> ${as.short}${L.deadline?` · взять до ${hm(L.deadline)}`:''}`:'<b>Закреплена:</b> нет, раздел без менеджера'}`;
+${as?`<b>Закреплена:</b> ${as.short}${L.deadline?` · до ${hm(L.deadline)}`:''}`:'<b>Закреплена:</b> нет, открыта всем'}`;
 }
-function renderTG(L, upTo=Infinity, title='Заявки 4-7.ru'){
-  if(!L) return `<div class="tg"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body"><div class="tg-svc">Заявок пока нет</div></div></div>`;
+function renderTG(L, upTo=Infinity, framed=true){
+  const head=`<div class="tg-h"><div class="tg-av">4-7</div><div><b>Заявки 4-7.ru</b><span>группа · бот и менеджеры</span></div></div>`;
+  const wrap=b=>`<div class="tg${framed?'':' bare'}" aria-label="Как заявка выглядит в Telegram">${head}<div class="tg-body">${b}</div></div>`;
+  if(!L) return wrap('<div class="tg-svc">Заявок пока нет</div>');
   const ev=L.events.filter((e,i)=>i<=upTo);
+  if(!ev.find(e=>e.k==='sent')) return wrap(`<div class="tg-svc">${ev.length?'Бот собирает заявку':'Здесь появится сообщение бота'}</div>`);
   const taken=ev.find(e=>e.k==='taken');
   const as=L.assigned?MID[L.assigned]:null;
-  if(!ev.find(e=>e.k==='sent')) return `<div class="tg"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body"><div class="tg-svc">${ev.length?'Бот собирает заявку из диалога':'Здесь появится сообщение бота'}</div></div></div>`;
-  let body=`<div class="tg-svc">${dayLabel(L.createdAt)}</div>
-   <div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">${tgLeadText(L)}${taken?`\n\n<b>Взята:</b> ${MID[L.takenBy].short} в ${hm(L.takenAt)}`:''}</div>
-   <div class="tg-kb"><span class="${taken?'off':''}">${taken?'Взята':'Беру'}</span><span>Открыть диалог</span></div>
+  let b=`<div class="tg-svc">${dayLabel(L.createdAt)}</div>
+   <div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">${tgLeadText(L)}${taken?`\n<b>Взята:</b> ${MID[L.takenBy].short}, ${hm(L.takenAt)}`:''}</div>
+   <div class="tg-kb"><span class="${taken?'off':''}">${taken?'Взята':'Беру'}</span><span>Диалог</span></div>
    <div class="tm">${taken?'<span class="tg-edit">изменено · </span>':''}${hm(L.createdAt)}</div></div>`;
   for(const e of ev){
-    if(e.k==='offhours') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">Нерабочее время. Заявка №${L.no} ждёт менеджера, клиенту обещан звонок после ${hm(nextWorkStart(L.createdAt))}.</div><div class="tm">${hm(e.t)}</div></div>`;
-    if(e.k==='open') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">${as?esc(as.short)+' не ответила за '+minsBetween(L.createdAt,e.t)+' мин. ':''}Заявка №${L.no} открыта всем: кто свободен, нажмите «Беру».</div>${taken?'':'<div class="tg-kb"><span>Беру</span><span>Открыть диалог</span></div>'}<div class="tm">${hm(e.t)}</div></div>`;
-    if(e.k==='taken') body+=`<div class="tg-svc pop">${esc(MID[L.takenBy].short)} взяла заявку №${L.no} · ${hm(e.t)}</div>`;
-    if(e.k==='nottaken') body+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7 (бот)</div><div class="tx">Заявка №${L.no} не взята. Висит с пометкой «не взято» до первого свободного менеджера.</div><div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='offhours') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">Нерабочее время. Клиенту обещан звонок после ${hm(nextWorkStart(L.createdAt))}.</div><div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='open') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">${as?esc(as.short)+' не ответила за '+minsBetween(L.createdAt,e.t)+' мин. ':''}Заявка №${L.no} открыта всем.</div>${taken?'':'<div class="tg-kb"><span>Беру</span><span>Диалог</span></div>'}<div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='taken') b+=`<div class="tg-svc pop">${esc(MID[L.takenBy].short)} взяла заявку · ${hm(e.t)}</div>`;
+    if(e.k==='nottaken') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">Заявка №${L.no} не взята.</div><div class="tm">${hm(e.t)}</div></div>`;
   }
-  return `<div class="tg" aria-label="Как заявка выглядит в Telegram"><div class="tg-h"><div class="tg-av">4-7</div><div><b>${title}</b><span>группа · бот и 5 менеджеров</span></div></div><div class="tg-body">${body}</div></div>`;
+  return wrap(b);
 }
 function renderLeads(){
   const list=LEADS.filter(l=>S.lFilter==='all'||l.status===S.lFilter);
   if(!list.find(l=>l.no===S.lId)&&list.length) S.lId=list[0].no;
   const L=LEADS.find(l=>l.no===S.lId);
   const taken=LEADS.filter(l=>l.status==='taken'), byAs=taken.filter(l=>l.takenBy===l.assigned&&!l.viaOpen);
-  const reactW=taken.filter(l=>isWork(l.createdAt)); const avg=reactW.length?Math.round(reactW.reduce((s,l)=>s+l.react,0)/reactW.length):0;
-  const c=k=>LEADS.filter(l=>k==='all'||l.status===k).length;
-  let h=pageTop('Заявки в Telegram','Каждая заявка уходит в группу менеджеров: сначала закреплённому за разделом, через T1 открывается всем. Здесь видно, кому ушла, во сколько и кто взял.');
+  const rw=taken.filter(l=>isWork(l.createdAt)); const avg=rw.length?Math.round(rw.reduce((s,l)=>s+l.react,0)/rw.length):0;
+  const c=k=>LEADS.filter(l=>k==='all'||l.status===k).length, waitN=c('waiting')+c('open')+c('nottaken');
+  let h=pageTop('Заявки');
   h+=`<div class="strip">
-    <div class="stat"><span class="metric">Заявок за 7 дней</span><span class="v">${LEADS.length}</span><span class="s">из ${DIALOGS.length} диалогов</span></div>
-    <div class="stat"><span class="metric">Взял закреплённый</span><span class="v">${Math.round(byAs.length/Math.max(1,taken.length)*100)}%</span><span class="s">${byAs.length} из ${taken.length} взятых</span></div>
-    <div class="stat"><span class="metric">Реакция в рабочее время</span><span class="v">${avg} мин</span><span class="s">от отправки до «Беру»</span></div>
-    <div class="stat"><span class="metric">Ушли в общий чат</span><span class="v">${LEADS.filter(l=>l.viaOpen).length}</span><span class="s">не взяли за ${T1_DEFAULT} мин</span></div>
-    <div class="stat"><span class="metric">Ждут сейчас</span><span class="v">${c('waiting')+c('open')+c('nottaken')}</span><span class="s">${c('nottaken')} с пометкой «не взято»</span></div>
-  </div>`;
-  h+=`<div class="leads"><section class="panel"><div class="panel-h"><div class="seg" role="group" aria-label="Фильтр по статусу">
-     ${[['all','Все'],['waiting','Ждёт закреплённого'],['open','Открыта всем'],['taken','Взята'],['nottaken','Не взята']].map(([k,t])=>`<button data-lf="${k}" aria-pressed="${S.lFilter===k}">${t} · ${c(k)}</button>`).join('')}</div></div>
-   <div class="tbl-wrap"><table><thead><tr><th>№</th><th>Создана</th><th>Клиент и запрос</th><th>Раздел</th><th>Закреплена</th><th>Взяла</th><th class="r">Реакция</th><th>Статус</th></tr></thead><tbody>
-   ${list.map(l=>`<tr data-lead="${l.no}" class="${l.no===S.lId?'sel':''}"><td class="num">${l.no}</td><td style="white-space:nowrap">${when(l.createdAt)}${isWork(l.createdAt)?'':'<br><span class="small muted">нерабочее</span>'}</td>
-     <td><b>${esc(l.client)}</b><br><span class="small muted">${esc(l.request)}</span></td><td class="small">${esc(secShort(l.sec))}</td><td class="small">${mgrName(l.assigned)}</td>
-     <td class="small">${l.takenBy?MID[l.takenBy].short+(l.viaOpen?'<br><span class="muted">из общего чата</span>':''):'<span class="muted">пока никто</span>'}</td>
-     <td class="r num">${l.react!=null?l.react+' мин':'<span class="muted">нет</span>'}</td><td><span class="badge ${LSTATUS[l.status][1]}">${LSTATUS[l.status][0]}</span></td></tr>`).join('')}
+    <div class="stat"><span class="metric">Заявок</span><span class="v">${LEADS.length}</span><span class="s">из ${DIALOGS.length} диалогов</span></div>
+    <div class="stat"><span class="metric">Взял закреплённый</span><span class="v">${Math.round(byAs.length/Math.max(1,taken.length)*100)}%</span><span class="s">${byAs.length} из ${taken.length}</span></div>
+    <div class="stat"><span class="metric">Реакция</span><span class="v">${avg} мин</span><span class="s">в рабочее время</span></div>
+    <div class="stat"><span class="metric">Ждут менеджера</span><span class="v">${waitN}</span><span class="s">${c('nottaken')} не взяты</span></div></div>`;
+  h+=`<div class="leads"><section class="panel"><div class="panel-h">${segHtml('lf',[['all','Все',c('all')],['waiting','Ждёт',c('waiting')],['open','Открыта всем',c('open')],['taken','Взята',c('taken')],['nottaken','Не взята',c('nottaken')]],S.lFilter)}</div>
+   <div class="tbl-wrap"><table><thead><tr><th>№</th><th>Создана</th><th>Клиент</th><th>Менеджер</th><th class="r">Реакция</th><th>Статус</th></tr></thead><tbody>
+   ${list.map(l=>`<tr data-lead="${l.no}" class="${l.no===S.lId?'sel':''}"><td class="num">${l.no}</td><td class="nw">${shortWhen(l.createdAt)}</td>
+     <td><div class="cl"><b>${esc(l.client)}</b><span class="ell muted">${esc(l.request)}</span></div></td>
+     <td class="nw">${l.takenBy?sur(l.takenBy):sur(l.assigned)}${l.viaOpen?' <span class="badge b-attn">общий</span>':''}</td>
+     <td class="r num">${l.react!=null?l.react+' мин':'<span class="muted">нет</span>'}</td><td>${leadBadge(l)}</td></tr>`).join('')}
    </tbody></table></div></section>
-   <aside style="display:flex;flex-direction:column;gap:12px;min-width:0">${L?renderTG(L):renderTG(null)}
-    ${L?`<section class="panel"><div class="panel-h"><h3>Маршрут заявки №${L.no}</h3><button class="btn" data-opendlg="${L.dialog}">Открыть диалог</button></div><div class="pb">${renderTimeline(L.events)}</div></section>`:''}
-   </aside></div>`;
+   <aside class="panel side-panel">${L?`${tabsHtml('lTab',[['tg','Telegram'],['route','Маршрут']])}
+     ${S.lTab==='tg'?renderTG(L,Infinity,false):`<div class="pb"><div class="small" style="margin-bottom:10px">${routeSummary(L)}</div>${renderTimeline(L.events)}<button class="btn" data-opendlg="${L.dialog}">Открыть диалог</button></div>`}`:renderTG(null,Infinity,false)}</aside></div>`;
   $main.innerHTML=h;
 }
 
-/* ================= ПРОВЕРКА МАРШРУТА ================= */
+/* ================= ТЕСТ МАРШРУТА ================= */
 const SIM={sec:'Природный камень Плитняки', time:'work', beh:'assigned', T1:15, step:-1, L:null, timer:null};
-const SIM_TIMES={work:{label:'Рабочее время, чт 11:40',d:new Date(2026,10,12,11,40)},late:{label:'Вечер буднего дня, чт 20:15',d:new Date(2026,10,12,20,15)},sat:{label:'Суббота 18:30, склад уже закрыт',d:new Date(2026,10,14,18,30)},sun:{label:'Воскресенье 13:00, выходной',d:new Date(2026,10,15,13,0)}};
+const SIM_TIMES={work:{label:'Будни 11:40',d:new Date(2026,10,12,11,40)},late:{label:'Будни 20:15',d:new Date(2026,10,12,20,15)},sat:{label:'Сб 18:30',d:new Date(2026,10,14,18,30)},sun:{label:'Вс 13:00',d:new Date(2026,10,15,13,0)}};
 function simBuild(){
   const save=R; R=rng(99);
   const start=SIM_TIMES[SIM.time].d;
   const L={no:1100,createdAt:start,sec:SIM.sec,assigned:SEC[SIM.sec].m,client:'Тестовый клиент',phone:'+7 900 •••-00-00',request:'тестовая заявка',calc:'Плитняк «Нубиец» 30-40 мм, 1,5 т (≈20 м²), 28 200 ₽',stock:'есть',reason:SEC[SIM.sec].h?'section':'cta',page:secShort(SIM.sec)};
-  const far=addMin(start,3*1440);
-  Object.assign(L, buildRoute(L,SIM.beh,SIM.T1,far));
+  Object.assign(L, buildRoute(L,SIM.beh,SIM.T1,addMin(start,3*1440)));
   R=save; SIM.L=L;
 }
 function renderSim(){
   if(!SIM.L) simBuild();
-  const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)];
-  const s=SEC[SIM.sec];
-  let h=pageTop('Проверка маршрута','Выберите раздел, время обращения и как поведут себя менеджеры. Бот проведёт тестовую заявку по правилам из КП и покажет, что увидит группа в Telegram.');
-  h+=`<div class="sim"><section class="panel"><div class="panel-h"><h2>Условия</h2></div><form class="form" id="simForm">
-    <div class="field"><label for="simSec">Раздел, откуда пришёл клиент</label><select id="simSec">${SECTIONS.map(x=>`<option value="${esc(x.c)}">${esc(secShort(x.c))}${x.m?'':' · без менеджера'}${x.h?' · сразу на менеджера':''}</option>`).join('')}</select>
-      <span class="hint">Закреплён: ${s.m?MID[s.m].short:'никто, заявка сразу открыта всем'}${s.h?'. ИИ по разделу не консультирует.':''}</span></div>
-    <div class="field"><span class="lbl">Когда обратился клиент</span><div class="radios">${Object.entries(SIM_TIMES).map(([k,v])=>`<label><input type="radio" name="simTime" value="${k}" ${SIM.time===k?'checked':''}>${v.label}</label>`).join('')}</div></div>
-    <div class="field"><span class="lbl">Как ответят менеджеры</span><div class="radios">
-      <label><input type="radio" name="simBeh" value="assigned" ${SIM.beh==='assigned'?'checked':''}>Закреплённый берёт сам</label>
-      <label><input type="radio" name="simBeh" value="colleague" ${SIM.beh==='colleague'?'checked':''}>Закреплённый молчит, берёт коллега</label>
-      <label><input type="radio" name="simBeh" value="nobody" ${SIM.beh==='nobody'?'checked':''}>Никто не берёт</label></div></div>
-    <div class="field"><label for="simT1">Время на ответ закреплённому (T1)</label><select id="simT1">${[5,10,15,20,30].map(v=>`<option value="${v}" ${SIM.T1===v?'selected':''}>${v} мин</option>`).join('')}</select><span class="hint">Значение уточняем у клиента, в КП обозначено как T1</span></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="submit" class="btn primary">Запустить заявку</button><button type="button" class="btn" data-simall>Показать всё сразу</button></div>
+  const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)], s=SEC[SIM.sec], done=SIM.step>=L.events.length-1;
+  let h=pageTop('Тест маршрута');
+  h+=`<section class="panel"><form class="tb" id="simForm">
+    <div class="field"><label for="simSec">Раздел</label><select id="simSec">${SECTIONS.map(x=>`<option value="${esc(x.c)}">${esc(secShort(x.c))}</option>`).join('')}</select>
+      <span class="hint">${s.m?'Закреплён: '+MID[s.m].short:'Без менеджера, сразу всем'}${s.h?' · ИИ не консультирует':''}</span></div>
+    <div class="field"><span class="lbl">Обращение</span>${segHtml('simtime',Object.entries(SIM_TIMES).map(([k,v])=>[k,v.label]),SIM.time)}<span class="hint">${isWork(SIM_TIMES[SIM.time].d)?'рабочее время':'нерабочее время'}</span></div>
+    <div class="field"><span class="lbl">Менеджеры</span>${segHtml('simbeh',[['assigned','Берёт закреплённый'],['colleague','Берёт коллега'],['nobody','Никто']],SIM.beh)}</div>
+    <div class="field"><label for="simT1">T1</label><select id="simT1">${[5,10,15,20,30].map(v=>`<option value="${v}" ${SIM.T1===v?'selected':''}>${v} мин</option>`).join('')}</select></div>
+    <div class="actions"><button type="submit" class="btn primary">Запустить</button><button type="button" class="btn" data-simall>Сразу итог</button></div>
   </form></section>
-  <section class="panel"><div class="panel-h"><h2>Что происходит</h2>${cur?`<span class="badge ${SIM.step>=L.events.length-1?LSTATUS[L.status][1]:'b-attn'}">${SIM.step>=L.events.length-1?LSTATUS[L.status][0]:'идёт'}</span>`:''}</div>
-    <div class="pb" style="display:flex;flex-direction:column;gap:14px">
-      <div><div class="eyebrow">Время</div><div class="clock num" id="simClock">${cur?hm(cur.t):hm(L.createdAt)}</div><div class="small muted">${dayLabel(L.createdAt)}${isWork(L.createdAt)?', рабочее время':', нерабочее время'}</div></div>
-      ${SIM.step<0?'<div class="small muted">Нажмите «Запустить заявку», шаги появятся по очереди.</div>':renderTimeline(L.events,SIM.step)}
-    </div></section>
-  ${renderTG(L, SIM.step)}
-  </div>`;
+  <div class="sim2"><section class="panel"><div class="panel-h"><h2>Ход заявки</h2>${cur?`<span class="badge ${done?LSTATUS[L.status][1]:'b-attn'}">${done?LSTATUS[L.status][0]:'идёт'}</span>`:''}</div>
+    <div class="pb sim-body"><div><div class="clock num">${cur?hm(cur.t):hm(L.createdAt)}</div><div class="small muted">${dayLabel(L.createdAt)}</div></div>
+    ${SIM.step<0?'<div class="small muted">Нажмите «Запустить».</div>':renderTimeline(L.events,SIM.step)}</div></section>
+  ${renderTG(L,SIM.step)}</div>`;
   $main.innerHTML=h;
   document.getElementById('simSec').value=SIM.sec;
 }
@@ -805,33 +825,37 @@ function simRun(all){
   SIM.step=0; render();
   SIM.timer=setInterval(()=>{ if(SIM.step>=SIM.L.events.length-1){clearInterval(SIM.timer);return} SIM.step++; render(); },1100);
 }
+function simReset(){SIM.step=-1;SIM.L=null;clearInterval(SIM.timer)}
 
 /* ================= АНАЛИТИКА ================= */
 function renderAnalytics(){
-  const N=DIALOGS.length, withCalc=DIALOGS.filter(d=>d.msgs.some(m=>m.who==='calc')).length, leads=LEADS.length, taken=LEADS.filter(l=>l.status==='taken').length;
-  const auto=DIALOGS.filter(d=>!d.lead).length, off=DIALOGS.filter(d=>!isWork(d.at)).length;
-  const cost=DIALOGS.reduce((s,d)=>s+d.costRub,0);
-  let h=pageTop('Аналитика','Сколько обращений закрыл ИИ, сколько стало заявками и как быстро менеджеры их забирают.');
-  h+=`<div class="kpis">
-   <div class="kpi"><span class="metric">Диалогов</span><span class="v">${N}</span><span class="s">${DIALOGS.reduce((s,d)=>s+d.msgs.filter(m=>m.who==='client'||m.who==='bot').length,0)} сообщений</span></div>
-   <div class="kpi"><span class="metric">ИИ ответил сам</span><span class="v">${Math.round(auto/N*100)}%</span><span class="s">${auto} без передачи менеджеру</span></div>
-   <div class="kpi"><span class="metric">Конверсия в заявку</span><span class="v">${Math.round(leads/N*100)}%</span><span class="s">${leads} заявок с контактом</span></div>
-   <div class="kpi"><span class="metric">Вне рабочего времени</span><span class="v">${Math.round(off/N*100)}%</span><span class="s">${off} обращений, раньше без ответа</span></div>
-   <div class="kpi"><span class="metric">Расход ИИ</span><span class="v">${rub(cost)}</span><span class="s">${rub(cost/Math.max(1,leads))} на заявку</span></div></div>`;
-  const F=[['Диалоги',N,'var(--navy)'],['Был расчёт',withCalc,'var(--accent)'],['Оставили контакт',leads,'var(--lead-ink)'],['Менеджер взял',taken,'var(--done-ink)']];
-  h+=`<div class="grid2"><section class="panel"><div class="panel-h"><h2>Воронка</h2><span class="small muted">диалог → заявка ${Math.round(leads/N*100)}%</span></div><div class="pb funnel">
-    ${F.map(([t,v,c],i)=>`<div class="fn"><span>${t}</span><div class="bar"><i style="width:${Math.max(2,v/N*100)}%;background:${c}"></i></div><span class="val">${v}${i?` · ${Math.round(v/F[i-1][1]*100)}%`:''}</span></div>`).join('')}</div></section>
-   <section class="panel"><div class="panel-h"><h2>Почему передали менеджеру</h2></div><div class="pb">
-    ${Object.entries(REASON).map(([k,t])=>{const v=LEADS.filter(l=>l.reason===k).length;return `<div class="hbar"><span>${t}</span><div class="bar"><i style="width:${v/Math.max(1,leads)*100}%"></i></div><span class="num" style="text-align:right">${v}</span></div>`}).join('')}
-    <div class="hbar"><span>Прощупывание без контакта</span><div class="bar"><i style="width:${DIALOGS.filter(d=>d.flags.includes('probe')).length/Math.max(1,leads)*100}%;background:var(--err-ink)"></i></div><span class="num" style="text-align:right">${DIALOGS.filter(d=>d.flags.includes('probe')).length}</span></div>
-   </div></section></div>`;
-  h+=`<div class="grid2b"><section class="panel chart"><div class="panel-h"><h2>Часы обращений</h2><span class="small muted">серым: рабочие часы склада</span></div>${hoursChart()}<div class="legend"><span><i style="background:var(--accent)"></i>в рабочее время</span><span><i style="background:var(--attn-ink)"></i>вне рабочего времени</span></div></section>
-   <section class="panel chart"><div class="panel-h"><h2>По дням</h2></div>${daysChart()}<div class="legend"><span><i style="background:var(--surface-2);border:1px solid var(--line)"></i>диалоги</span><span><i style="background:var(--lead-ink)"></i>заявки</span></div></section></div>`;
-  const rows=MANAGERS.map(m=>{const as=LEADS.filter(l=>l.assigned===m.id);const self=as.filter(l=>l.takenBy===m.id&&!l.viaOpen).length;const fromOpen=LEADS.filter(l=>l.takenBy===m.id&&l.viaOpen).length;const lost=as.filter(l=>l.viaOpen).length;const rs=LEADS.filter(l=>l.takenBy===m.id&&isWork(l.createdAt));const avg=rs.length?Math.round(rs.reduce((s,l)=>s+l.react,0)/rs.length):null;return {m,as:as.length,self,fromOpen,lost,avg}});
-  h+=`<div class="grid2b"><section class="panel"><div class="panel-h"><h2>Менеджеры</h2></div><div class="tbl-wrap"><table><thead><tr><th>Менеджер</th><th class="r">Закреплено</th><th class="r">Взяла сама</th><th class="r">Ушло в общий</th><th class="r">Взяла из общего</th><th class="r">Реакция</th></tr></thead><tbody>
-   ${rows.map(r=>`<tr><td>${r.m.short}</td><td class="r num">${r.as}</td><td class="r num">${r.self}</td><td class="r num">${r.lost}</td><td class="r num">${r.fromOpen}</td><td class="r num">${r.avg!=null?r.avg+' мин':'нет'}</td></tr>`).join('')}
-   </tbody></table></div></section>
-   <section class="panel"><div class="panel-h"><h2>Разделы</h2><span class="small muted">диалоги / заявки</span></div><div class="pb">${topSections()}</div></section></div>`;
+  const N=DIALOGS.length, leads=LEADS.length;
+  let h=pageTop('Аналитика')+tabsHtml('aTab',[['overview','Обзор'],['managers','Менеджеры'],['sections','Разделы и дни']]);
+  if(S.aTab==='overview'){
+    const withCalc=DIALOGS.filter(d=>d.msgs.some(m=>m.who==='calc')).length, taken=LEADS.filter(l=>l.status==='taken').length;
+    const auto=DIALOGS.filter(d=>!d.lead).length, off=DIALOGS.filter(d=>!isWork(d.at)).length, cost=DIALOGS.reduce((s,d)=>s+d.costRub,0);
+    h+=`<div class="kpis">
+     <div class="kpi"><span class="metric">Диалогов</span><span class="v">${N}</span></div>
+     <div class="kpi"><span class="metric">ИИ ответил сам</span><span class="v">${Math.round(auto/N*100)}%</span></div>
+     <div class="kpi"><span class="metric">Конверсия в заявку</span><span class="v">${Math.round(leads/N*100)}%</span></div>
+     <div class="kpi"><span class="metric">Вне рабочего времени</span><span class="v">${Math.round(off/N*100)}%</span></div>
+     <div class="kpi"><span class="metric">Расход ИИ</span><span class="v">${rub(cost)}</span><span class="s">${rub(cost/Math.max(1,leads))} на заявку</span></div></div>`;
+    const F=[['Диалоги',N,'var(--navy)'],['Был расчёт',withCalc,'var(--accent)'],['Оставили контакт',leads,'var(--lead-ink)'],['Менеджер взял',taken,'var(--done-ink)']];
+    h+=`<div class="grid2"><section class="panel"><div class="panel-h"><h2>Воронка</h2></div><div class="pb funnel">
+      ${F.map(([t,v,cl],i)=>`<div class="fn"><span>${t}</span><div class="bar"><i style="width:${Math.max(2,v/N*100)}%;background:${cl}"></i></div><span class="val">${v}${i?` · ${Math.round(v/F[i-1][1]*100)}%`:''}</span></div>`).join('')}</div></section>
+     <section class="panel chart"><div class="panel-h"><h2>Часы обращений</h2></div>${hoursChart()}<div class="legend"><span><i style="background:var(--accent)"></i>рабочее время</span><span><i style="background:var(--attn-ink)"></i>нерабочее</span></div></section></div>`;
+  } else if(S.aTab==='managers'){
+    const rows=MANAGERS.map(m=>{const as=LEADS.filter(l=>l.assigned===m.id);const self=as.filter(l=>l.takenBy===m.id&&!l.viaOpen).length;const fromOpen=LEADS.filter(l=>l.takenBy===m.id&&l.viaOpen).length;const lost=as.filter(l=>l.viaOpen).length;const rs=LEADS.filter(l=>l.takenBy===m.id&&isWork(l.createdAt));const avg=rs.length?Math.round(rs.reduce((s,l)=>s+l.react,0)/rs.length):null;return {m,as:as.length,self,fromOpen,lost,avg}});
+    const probe=DIALOGS.filter(d=>d.flags.includes('probe')).length;
+    h+=`<div class="grid2"><section class="panel"><div class="panel-h"><h2>Кто забирает заявки</h2></div><div class="tbl-wrap"><table><thead><tr><th>Менеджер</th><th class="r">Закреплено</th><th class="r">Взяла сама</th><th class="r">Упустила</th><th class="r">Из общего</th><th class="r">Реакция</th></tr></thead><tbody>
+     ${rows.map(r=>`<tr class="static"><td class="nw">${r.m.short}</td><td class="r num">${r.as}</td><td class="r num">${r.self}</td><td class="r num">${r.lost}</td><td class="r num">${r.fromOpen}</td><td class="r num">${r.avg!=null?r.avg+' мин':'нет'}</td></tr>`).join('')}</tbody></table></div></section>
+     <section class="panel"><div class="panel-h"><h2>Почему передали менеджеру</h2></div><div class="pb">
+      ${Object.entries(REASON).filter(([k])=>k!=='large').map(([k,t])=>{const v=LEADS.filter(l=>l.reason===k).length;return `<div class="hbar"><span>${t}</span><div class="bar"><i style="width:${v/Math.max(1,leads)*100}%"></i></div><span class="num r">${v}</span></div>`}).join('')}
+      <div class="hbar"><span>Прощупывание, без контакта</span><div class="bar"><i style="width:${probe/Math.max(1,leads)*100}%;background:var(--err-ink)"></i></div><span class="num r">${probe}</span></div></div></section></div>`;
+  } else {
+    h+=`<div class="grid2"><section class="panel"><div class="panel-h"><h2>Разделы</h2><span class="small muted">диалоги / заявки</span></div><div class="pb">${topSections()}</div></section>
+     <section class="panel chart"><div class="panel-h"><h2>По дням</h2></div>${daysChart()}<div class="legend"><span><i style="background:var(--surface-2);border:1px solid var(--line)"></i>диалоги</span><span><i style="background:var(--lead-ink)"></i>заявки</span></div></section></div>`;
+  }
   $main.innerHTML=h;
 }
 function hoursChart(){
@@ -856,45 +880,53 @@ function daysChart(){
 function topSections(){
   const m={};for(const d of DIALOGS){m[d.sec]=m[d.sec]||[0,0];m[d.sec][0]++;if(d.lead)m[d.sec][1]++}
   const arr=Object.entries(m).sort((a,b)=>b[1][0]-a[1][0]).slice(0,8), max=arr[0]?arr[0][1][0]:1;
-  return arr.map(([c,[n,l]])=>`<div class="hbar"><span>${esc(secShort(c))}</span><div class="bar"><i style="width:${n/max*100}%"></i></div><span class="num" style="text-align:right">${n} / ${l}</span></div>`).join('');
+  return arr.map(([c,[n,l]])=>`<div class="hbar"><span>${esc(secShort(c))}</span><div class="bar"><i style="width:${n/max*100}%"></i></div><span class="num r">${n} / ${l}</span></div>`).join('');
 }
 
-/* ================= МЕНЕДЖЕРЫ И ПРАВИЛА ================= */
+/* ================= НАСТРОЙКИ ================= */
+const ROOTS=[['Фонтаны и МАФЫ','Фонтаны и МАФы'],['Камень для мощения','Камень для мощения'],['Природный камень','Природный камень'],['Материалы для ЛД','Материалы для ЛД'],['Облицовочная плитка','Облицовочная плитка']];
+function groupSecs(arr){
+  const g={};
+  for(const s of arr){const r=ROOTS.find(([p])=>s.c.startsWith(p))||[s.c,s.c];let leaf=s.c.slice(r[0].length).trim()||r[1];leaf=leaf.charAt(0).toLowerCase()+leaf.slice(1);(g[r[1]]=g[r[1]]||[]).push(leaf)}
+  return `<dl class="grp">${Object.entries(g).map(([k,v])=>`<dt>${k} <span class="muted">${v.length}</span></dt><dd>${esc(v.join(', '))}</dd>`).join('')}</dl>`;
+}
+const QUESTIONS=[
+  ['Один товар в двух разделах с разными менеджерами','22 плитняка лежат и в «Песчанике» (Жиляева), и в «Плитняках» (Перетятько), сланцевые ещё и в «Сланце» (Бирючева). Предлагаем отдавать заявку менеджеру раздела, с которого пришёл клиент.'],
+  ['Как закреплённый получает заявку первым','В прототипе: одна группа, первые T1 минут «Беру» может нажать только закреплённый. Альтернатива: сначала личное сообщение менеджеру, потом группа.'],
+  ['Живой перехват или перезвон','В рабочее время менеджер подключается к чату на сайте или перезванивает по телефону из заявки.'],
+  ['T1, рабочие часы, лимиты по группам','Сейчас стоит 15 минут и режим склада с сайта. Лимиты объёма по группам не заданы.'],
+  ['Пятый менеджер и Telegram-аккаунты','На сайте нашли четырёх менеджеров, по КП их пять.'],
+  ['Менеджеры для разделов без закрепления','11 разделов на сайте без менеджера, заявки из них идут сразу всем.'],
+  ['Персональные данные','Имя и телефон хранятся только в заявке в Telegram, в базе бота не сохраняются. В форму добавляем согласие на обработку.'],
+];
 function renderRouting(){
   const none=SECTIONS.filter(s=>!s.m), hand=SECTIONS.filter(s=>s.h);
-  let h=pageTop('Менеджеры и правила','Закрепление менеджеров за разделами взято с карточек товаров на 4-7.ru. Параметры с пометкой «уточнить» ждут подтверждения Андрея.');
-  h+=`<div class="params">
-   <div class="param"><span class="metric">Время на ответ закреплённому (T1)</span><span class="v">${T1_DEFAULT} мин</span><span class="s"><span class="badge b-attn">уточнить</span> после этого заявка открыта всем</span></div>
-   <div class="param"><span class="metric">Рабочие часы</span><span class="v">${hoursText}</span><span class="s"><span class="badge b-attn">уточнить</span> на сайте два варианта режима склада</span></div>
-   <div class="param"><span class="metric">Лимит X по группам</span><span class="v">не задан</span><span class="s"><span class="badge b-attn">уточнить</span> выше лимита сразу менеджеру</span></div>
-   <div class="param"><span class="metric">Анти-прощупывание</span><span class="v">+20% в одной сессии</span><span class="s">повтор того же товара с ростом объёма → менеджеру</span></div></div>`;
-  h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Менеджеры</h2><span class="small muted">по КП их пять, на сайте нашли четырёх</span></div>
-   ${MANAGERS.map(m=>{const ss=SECTIONS.filter(s=>s.m===m.id);return `<div class="mgr"><span class="av">${m.ini}</span><div style="min-width:0"><b>${m.name}</b><details><summary>${ss.length} разделов, ${ss.reduce((a,s)=>a+s.n,0)} товаров · показать</summary><ul>${ss.map(s=>`<li>${esc(secShort(s.c))}${s.h?' (сразу на менеджера)':''}</li>`).join('')}</ul></details></div><span class="small muted">TG: уточнить</span></div>`}).join('')}
-   <div class="mgr"><span class="av q">?</span><div><b>Пятый менеджер</b><div class="small muted">На карточках сайта не встречается. Нужны имя и Telegram.</div></div><span class="badge b-attn">уточнить</span></div>
-   </section>
-   <section class="panel"><div class="panel-h"><h2>Когда ИИ передаёт заявку</h2></div><div class="tbl-wrap"><table class="rules"><thead><tr><th>Ситуация</th><th>Рабочее время</th><th>Нерабочее</th></tr></thead><tbody>
-    <tr><td>Клиент заполнил форму (имя и телефон)</td><td>заявка закреплённому, через T1 всем</td><td>заявка с пометкой «ждёт менеджера»</td></tr>
-    <tr><td>Раздел из списка «сразу на менеджера»</td><td>соединить с менеджером</td><td>собрать контакт, отправить заявку</td></tr>
-    <tr><td>Товар «по заказу» (нет цены или остатка)</td><td>соединить с менеджером</td><td>собрать контакт, отправить заявку</td></tr>
-    <tr><td>Не хватает остатка: до 20% «чуть не хватает», больше «не хватает»</td><td colspan="2">предложить передать менеджеру</td></tr>
-    <tr><td>Объём больше лимита X или повтор +20%</td><td colspan="2">к менеджеру; отказ дать контакт пишется в журнал</td></tr>
-    <tr><td>Точный остаток</td><td colspan="2">не называется, только «есть / чуть не хватает / нет»</td></tr>
-   </tbody></table></div></section></div>`;
-  h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Разделы без менеджера на сайте</h2><span class="badge b-attn">${none.length}</span></div>
-     <div class="note" style="border-top:0">Заявки из этих разделов сейчас сразу уходят всем в группу. Нужно закрепить менеджера.</div>
-     <div class="taglist">${none.map(s=>`<span class="chip">${esc(secShort(s.c))}</span>`).join('')}</div></section>
-   <section class="panel"><div class="panel-h"><h2>Сразу на менеджера</h2><span class="badge b-info">${hand.length} разделов</span></div>
-     <div class="note" style="border-top:0">ИИ по ним не консультирует. Список согласован с Андреем: фонтаны и МАФы, кортен-сталь целиком, клеи, очистители, облицовочная плитка, дикий камень, галька на сетке, брусчатка оптом, товары со скидкой, бетонная плитка, габионы.</div>
-     <div class="taglist">${hand.map(s=>`<span class="chip">${esc(secShort(s.c))}</span>`).join('')}</div></section></div>`;
-  h+=`<section class="panel"><div class="panel-h"><h2>Открытые вопросы к клиенту</h2></div><ol class="qs">
-    <li><b>Один товар в двух разделах с разными менеджерами.</b> 22 плитняка лежат и в «Песчанике» (Жиляева), и в «Плитняках» (Перетятько), сланцевые ещё и в «Сланце» (Бирючева). Предлагаем: заявку получает менеджер раздела, с которого пришёл клиент.</li>
-    <li><b>Как закреплённый получает заявку первым.</b> Вариант в прототипе: одна группа, бот отмечает закреплённого, первые T1 минут «Беру» доступна только ему. Альтернатива: сначала личное сообщение менеджеру, потом группа.</li>
-    <li><b>Живой перехват или перезвон.</b> В рабочее время менеджер подключается к чату на сайте или перезванивает по телефону из заявки.</li>
-    <li><b>Значение T1, рабочие часы, лимиты X по группам.</b></li>
-    <li><b>Пятый менеджер и Telegram-аккаунты всех пяти.</b></li>
-    <li><b>Менеджеры для ${none.length} разделов без закрепления.</b></li>
-    <li><b>Персональные данные.</b> Имя и телефон клиента хранятся только в заявке в Telegram, в базе бота не сохраняются. В форму бота добавляем согласие на обработку данных.</li>
-  </ol></section>`;
+  let h=pageTop('Настройки')+tabsHtml('rTab',[['managers','Менеджеры'],['rules','Правила передачи'],['sections','Разделы'],['questions','Вопросы к клиенту',QUESTIONS.length]]);
+  if(S.rTab==='managers'){
+    h+=`<section class="panel">${MANAGERS.map(m=>{const ss=SECTIONS.filter(s=>s.m===m.id);return `<div class="mgr"><span class="av">${m.ini}</span><div class="mgr-b"><b>${m.name}</b>
+      <details><summary>${ss.length} разделов · ${ss.reduce((a,s)=>a+s.n,0)} товаров</summary>${groupSecs(ss)}</details></div><span class="badge b-attn">TG уточнить</span></div>`}).join('')}
+     <div class="mgr"><span class="av q">?</span><div class="mgr-b"><b>Пятый менеджер</b><span class="small muted">на сайте не найден</span></div><span class="badge b-attn">уточнить</span></div></section>`;
+  } else if(S.rTab==='rules'){
+    h+=`<div class="params">
+     <div class="param"><span class="metric">T1, ответ закреплённого</span><span class="v">${T1_DEFAULT} мин</span><span class="badge b-attn">уточнить</span></div>
+     <div class="param"><span class="metric">Рабочие часы</span><span class="v">${hoursText}</span><span class="badge b-attn">уточнить</span></div>
+     <div class="param"><span class="metric">Лимит объёма по группам</span><span class="v">не задан</span><span class="badge b-attn">уточнить</span></div>
+     <div class="param"><span class="metric">Анти-прощупывание</span><span class="v">+20% за сессию</span><span class="badge b-done">согласовано</span></div></div>
+     <section class="panel"><div class="tbl-wrap"><table class="rules"><thead><tr><th>Ситуация</th><th>Рабочее время</th><th>Нерабочее</th></tr></thead><tbody>
+      <tr class="static"><td>Клиент оставил имя и телефон</td><td>закреплённому, через T1 всем</td><td>пометка «ждёт менеджера»</td></tr>
+      <tr class="static"><td>Раздел «сразу на менеджера»</td><td>соединить с менеджером</td><td>собрать контакт</td></tr>
+      <tr class="static"><td>Товар под заказ</td><td>соединить с менеджером</td><td>собрать контакт</td></tr>
+      <tr class="static"><td>Не хватает остатка</td><td colspan="2">до 20% «чуть не хватает», больше «не хватает», предложить менеджера</td></tr>
+      <tr class="static"><td>Крупный объём или повтор +20%</td><td colspan="2">к менеджеру, отказ дать контакт в журнал</td></tr>
+      <tr class="static"><td>Точный остаток</td><td colspan="2">не называется, только «есть / чуть не хватает / нет»</td></tr>
+     </tbody></table></div></section>`;
+  } else if(S.rTab==='sections'){
+    h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Без менеджера</h2><span class="badge b-attn">${none.length}</span></div>${groupSecs(none)}</section>
+     <section class="panel"><div class="panel-h"><h2>Сразу на менеджера</h2><span class="badge b-info">${hand.length}</span></div>${groupSecs(hand)}
+      <div class="note">Без товаров в каталоге, но тоже на менеджера: брусчатка оптом, товары со скидкой, бетонная плитка, габионы.</div></section></div>`;
+  } else {
+    h+=`<section class="panel"><ol class="qs">${QUESTIONS.map(([t,x])=>`<li><details><summary><b>${t}</b></summary><p>${x}</p></details></li>`).join('')}</ol></section>`;
+  }
   $main.innerHTML=h;
 }
 
@@ -909,28 +941,31 @@ function go(r){ if(location.hash.slice(1)!==r) location.hash=r; else {S.route=r;
 window.addEventListener('hashchange',()=>{const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';clearInterval(SIM.timer);render();window.scrollTo(0,0)});
 document.addEventListener('click',e=>{
   const t=e.target.closest('button,tr,[data-openlead]'); if(!t) return;
-  if(t.dataset.route){go(t.dataset.route);return}
-  if(t.dataset.dsub){S.dsub=t.dataset.dsub;try{localStorage.setItem('pult47',JSON.stringify({dsub:S.dsub}))}catch(_){};render();return}
-  if(t.dataset.dlg){S.dId=t.dataset.dlg;S.mobile='chat';render();return}
+  const ds=t.dataset;
+  if(ds.route){go(ds.route);return}
+  if(ds.tab){const [k,v]=ds.tab.split(':');S[k]=v;render();return}
+  if(ds.fs){S.fStatus=ds.fs;render();return}
+  if(ds.dlg){S.dId=ds.dlg;S.mobile='chat';render();return}
   if(t.hasAttribute('data-back')){S.mobile='list';render();return}
-  if(t.dataset.openlead){S.lId=+t.dataset.openlead;S.lFilter='all';go('leads');return}
-  if(t.dataset.lead){S.lId=+t.dataset.lead;render();return}
-  if(t.dataset.lf){S.lFilter=t.dataset.lf;render();return}
-  if(t.dataset.opendlg){S.dId=t.dataset.opendlg;S.dsub='messages';S.fStatus='all';S.fSec='all';S.fMgr='all';S.q='';S.mobile='chat';go('dialogs');return}
+  if(ds.openlead){S.lId=+ds.openlead;S.lFilter='all';S.lTab='tg';go('leads');return}
+  if(ds.lead){S.lId=+ds.lead;render();return}
+  if(ds.lf){S.lFilter=ds.lf;render();return}
+  if(ds.opendlg){S.dId=ds.opendlg;S.fStatus='all';S.fSec='all';S.fMgr='all';S.q='';S.mobile='chat';go('dialogs');return}
+  if(ds.simtime){SIM.time=ds.simtime;simReset();render();return}
+  if(ds.simbeh){SIM.beh=ds.simbeh;simReset();render();return}
   if(t.hasAttribute('data-simall')){simRun(true);return}
 });
 document.addEventListener('change',e=>{
   const id=e.target.id;
-  if(id==='fStatus'){S.fStatus=e.target.value;render()} else if(id==='fSec'){S.fSec=e.target.value;render()} else if(id==='fMgr'){S.fMgr=e.target.value;render()}
-  else if(id==='simSec'){SIM.sec=e.target.value;SIM.step=-1;SIM.L=null;clearInterval(SIM.timer);render()}
-  else if(id==='simT1'){SIM.T1=+e.target.value;SIM.step=-1;SIM.L=null;render()}
-  else if(e.target.name==='simTime'){SIM.time=e.target.value;SIM.step=-1;SIM.L=null;render()}
-  else if(e.target.name==='simBeh'){SIM.beh=e.target.value;SIM.step=-1;SIM.L=null;render()}
+  if(id==='fSec'){S.fSec=e.target.value;render()} else if(id==='fMgr'){S.fMgr=e.target.value;render()}
+  else if(id==='simSec'){SIM.sec=e.target.value;simReset();render()}
+  else if(id==='simT1'){SIM.T1=+e.target.value;simReset();render()}
 });
 let qTimer;
 document.addEventListener('input',e=>{if(e.target.id==='q'){clearTimeout(qTimer);const v=e.target.value;qTimer=setTimeout(()=>{S.q=v;render();const el=document.getElementById('q');if(el){el.focus();el.setSelectionRange(v.length,v.length)}},250)}});
 document.addEventListener('submit',e=>{if(e.target.id==='simForm'){e.preventDefault();simRun(false)}});
 (function init(){const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';render()})();
+
 </script>
 
 </body>
