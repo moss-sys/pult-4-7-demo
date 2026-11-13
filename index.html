@@ -341,6 +341,62 @@ tbody tr.static:hover td{background:none}
 /* свои стрелки у выпадающих списков: одинаково во всех браузерах, с отступом от края */
 select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:var(--chev);background-repeat:no-repeat;background-position:right 10px center;background-size:14px 14px;padding-right:32px!important;cursor:pointer;text-overflow:ellipsis}
 select::-ms-expand{display:none}
+
+/* v3: настройка маршрутов администратором */
+.rt-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.rt-tools .seg{flex-wrap:nowrap;overflow-x:auto}.rt-tools .seg button{white-space:nowrap}
+.rt-tools input,.rt-bulk select,.rt-row select,.mgr-c select,.mgr-c input,.param select{border:1px solid var(--line);background-color:var(--bg);color:var(--ink);border-radius:var(--r-md);padding:6px 8px;font-size:12.5px;font-family:var(--font);min-width:0}
+.rt-tools input{flex:1 1 200px;max-width:300px}
+.rt-bulk{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 14px;background:var(--accent-soft);border-bottom:1px solid var(--line);font-size:12.5px}
+.rt-bulk select{max-width:220px}
+.rt-row{display:grid;grid-template-columns:18px minmax(0,1fr) 230px 190px;gap:10px;align-items:center;padding:6px 14px;border-top:1px solid var(--line)}
+.rt-row select{width:100%}
+.rt-row select.warn{border-color:var(--attn-ink)}
+.rt-row.chg{background:var(--accent-soft)}
+.rt-head{border-top:0;padding-top:8px;padding-bottom:6px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.rt-name{display:flex;gap:8px;align-items:baseline;min-width:0;cursor:pointer}
+.rt-name b{font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rt-name span{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.rt-g{display:flex;gap:10px;align-items:center;padding:12px 14px 6px;border-top:1px solid var(--line);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.rt-g label{cursor:pointer}.rt-g .muted{font-weight:500}
+.rt input[type=checkbox],.rt-g input[type=checkbox],.hrow input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;margin:0;cursor:pointer}
+.link{border:0;background:none;padding:0;color:var(--accent-ink);font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.log summary{cursor:pointer;padding:12px 14px;font-size:13px;font-weight:600;list-style:none;display:flex;gap:8px;align-items:center}
+.log summary::-webkit-details-marker{display:none}
+.log ol{list-style:none;margin:0;padding:0 14px 12px;display:flex;flex-direction:column;gap:10px;font-size:12.5px}
+.log li{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:8px}
+.savebar{position:sticky;bottom:12px;z-index:5;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;border:1px solid var(--line);background:var(--bg);border-radius:var(--r-lg);padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.10)}
+.savebar.ok{border-color:var(--done-ink)}
+.savebar .grow{flex:1 1 260px;min-width:0;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.savebar .grow b{font-weight:600}
+.sb-a{display:flex;gap:6px;flex-wrap:wrap}
+.mgr2{grid-template-columns:32px minmax(0,1fr) auto}
+.mgr2.chg{background:var(--accent-soft)}
+.rt,.panel.mgrs{overflow:hidden}
+.pline{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;padding:3px 0}
+.mgr-c{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.mgr-c input[type=text]{width:140px}
+.mgr-c select{max-width:230px}
+.sw{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.sw input{-webkit-appearance:none;appearance:none;width:32px;height:18px;border-radius:9px;background:var(--line);position:relative;cursor:pointer;margin:0;flex:none;transition:background .15s}
+.sw input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.sw input:checked{background:var(--done-ink)}.sw input:checked::after{transform:translateX(14px)}
+.param.span2{grid-column:span 2}
+.param select{align-self:flex-start;min-width:110px}
+.hrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;min-height:32px}
+.hrow .hl{width:44px;font-weight:500}.hrow select{min-width:84px}
+.hrow .hoff{width:178px}
+.ck{display:inline-flex;gap:6px;align-items:center;cursor:pointer;color:var(--muted)}
+@media (max-width:1080px){.param.span2{grid-column:1/-1}}
+@media (max-width:760px){
+  .rt-head{display:none}
+  .rt-row{grid-template-columns:18px minmax(0,1fr) minmax(0,1fr);row-gap:6px;padding:8px 14px}
+  .rt-name{grid-column:2/-1}.rt-row .s1{grid-column:2}.rt-row .s2{grid-column:3}
+  .mgr2{grid-template-columns:32px minmax(0,1fr)}
+  .mgr-c{grid-column:1/-1;justify-content:flex-start}
+  .rt-tools input{max-width:none}
+}
+@media (max-width:560px){.rt-row{grid-template-columns:18px minmax(0,1fr)}.rt-row .s1,.rt-row .s2{grid-column:2}.mgr-c select{max-width:none;flex:1 1 100%}.param.span2{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -415,26 +471,30 @@ const MON=['янв','фев','мар','апр','мая','июн','июл','ав�
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
 function dayLabel(d){const y=new Date(NOW);y.setDate(y.getDate()-1);if(sameDay(d,NOW))return 'сегодня';if(sameDay(d,y))return 'вчера';return `${WD[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`}
 const when=d=>`${dayLabel(d)}, ${hm(d)}`;
-function isWork(d){const h=HOURS[d.getDay()];if(!h)return false;const x=d.getHours()+d.getMinutes()/60;return x>=h[0]&&x<h[1]}
-function nextWorkStart(d){let x=new Date(d.getFullYear(),d.getMonth(),d.getDate());for(let i=0;i<9;i++){const h=HOURS[x.getDay()];if(h){const s=new Date(x);s.setHours(Math.floor(h[0]),Math.round((h[0]%1)*60),0,0);if(s>d)return s}x=new Date(x.getFullYear(),x.getMonth(),x.getDate()+1)}return d}
-function workEnd(d){const h=HOURS[d.getDay()];const e=new Date(d);e.setHours(Math.floor(h[1]),Math.round((h[1]%1)*60),0,0);return e}
+function isWork(d,H=HOURS){const h=H[d.getDay()];if(!h)return false;const x=d.getHours()+d.getMinutes()/60;return x>=h[0]&&x<h[1]}
+function nextWorkStart(d,H=HOURS){let x=new Date(d.getFullYear(),d.getMonth(),d.getDate());for(let i=0;i<9;i++){const h=H[x.getDay()];if(h){const s=new Date(x);s.setHours(Math.floor(h[0]),Math.round((h[0]%1)*60),0,0);if(s>d)return s}x=new Date(x.getFullYear(),x.getMonth(),x.getDate()+1)}return d}
+function workEnd(d,H=HOURS){const h=H[d.getDay()];const e=new Date(d);e.setHours(Math.floor(h[1]),Math.round((h[1]%1)*60),0,0);return e}
 const hoursText='пн-пт 9:30-18:00, сб 10:00-17:00';
 const ceil1=x=>Math.ceil(x*10-1e-9)/10;
 const masked=()=>`+7 9${Math.floor(R()*9)}${Math.floor(R()*9)} •••-${pad(Math.floor(R()*100))}-${pad(Math.floor(R()*100))}`;
 
 /* ================= МАРШРУТ ЗАЯВКИ (правила КП) ================= */
 // behavior: 'assigned' | 'colleague' | 'nobody' ; T1 мин
-function buildRoute(L, behavior, T1, now){
+// opt.H: рабочие часы, opt.pool: кто из менеджеров сейчас принимает заявки (по умолчанию как на сайте)
+function buildRoute(L, behavior, T1, now, opt={}){
+  const H=opt.H||HOURS;
   const ev=[], c=L.createdAt, as=L.assigned?MID[L.assigned]:null;
-  const others=MANAGERS.filter(m=>m.id!==L.assigned&&m.id!=='zhul');
+  const others=(opt.pool||MANAGERS.filter(m=>m.id!=='zhul')).filter(m=>m.id!==L.assigned);
   const push=(t,k,text)=>ev.push({t,k,text});
+  if(L.mode==='manager') push(c,'mode','Раздел «сразу менеджеру»: ИИ не консультирует, сразу предлагает связаться с менеджером');
+  if(L.mode==='off') push(c,'mode','Раздел скрыт у бота: товары не показываются, обращение идёт как общий вопрос');
   push(c,'created','Клиент оставил имя и телефон, заявка создана из диалога');
-  if(as) push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru», закреплена за <b>${as.short}</b>, первые ${T1} мин взять может только она`);
-  else push(addMin(c,.1),'sent','Отправлена в группу «Заявки 4-7.ru». У раздела нет закреплённого менеджера, заявка сразу открыта всем');
+  if(as) push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru», закреплена за <b>${as.short}</b>${L.subFor?` вместо ${MID[L.subFor].short} (не принимает заявки)`:''}, первые ${T1} мин взять может только она`);
+  else push(addMin(c,.1),'sent',`Отправлена в группу «Заявки 4-7.ru». ${L.subFor?`${MID[L.subFor].short} не принимает заявки, замены нет`:'У раздела нет закреплённого менеджера'}, заявка сразу открыта всем`);
   let status='waiting', takenBy=null, takenAt=null, react=null, viaOpen=false;
-  const take=(t,m,from)=>{if(t<=now){push(t,'taken',`<b>${m.short}</b> нажала «Беру». Остальные видят, что клиент занят`);status='taken';takenBy=m.id;takenAt=t;react=minsBetween(from,t);return true}return false};
-  if(!isWork(c)){
-    const ws=nextWorkStart(c);
+  const take=(t,m,from)=>{if(m&&t<=now){push(t,'taken',`<b>${m.short}</b> нажала «Беру». Остальные видят, что клиент занят`);status='taken';takenBy=m.id;takenAt=t;react=minsBetween(from,t);return true}return false};
+  if(!isWork(c,H)){
+    const ws=nextWorkStart(c,H);
     push(addMin(c,.2),'offhours',`Нерабочее время. Заявка помечена «ждёт менеджера», клиенту обещан звонок после ${hm(ws)} (${dayLabel(ws)})`);
     if(behavior==='nobody'){ if(ws<=now){push(addMin(ws,T1),'nottaken','Утром никто не взял заявку. Пометка «не взято» остаётся');status='nottaken'} else status='nottaken'; }
     else { const m = (behavior==='assigned'&&as)?as:pick(others); if(!take(addMin(ws,between(4,35)),m,ws)) status='nottaken'; }
@@ -446,7 +506,7 @@ function buildRoute(L, behavior, T1, now){
     const open=addMin(c,T1);
     if(open<=now){ push(open,'open',`${as.short} не ответила за ${T1} мин. Бот открыл заявку всем в группе`); viaOpen=true; status='open';
       if(behavior==='colleague'){ const m=pick(others); take(addMin(open,between(1,9)),m,c); }
-      else { const e=workEnd(c); const ee = e>open? e : addMin(open,30); if(ee<=now){push(ee,'nottaken','До конца рабочего дня никто не взял. Пометка «не взято», ждёт менеджера');status='nottaken'} }
+      else { const e=workEnd(c,H); const ee = e>open? e : addMin(open,30); if(ee<=now){push(ee,'nottaken','До конца рабочего дня никто не взял. Пометка «не взято», ждёт менеджера');status='nottaken'} }
     } else status='waiting';
   }
   ev.sort((a,b)=>a.t-b.t);
@@ -651,9 +711,59 @@ const DBY=Object.fromEntries(DIALOGS.map(d=>[d.id,d]));
 const REASON={cta:'Клиент оставил контакт',stock:'Не хватает остатка',order:'Товар под заказ',section:'Раздел на менеджера',large:'Крупный объём'};
 const LSTATUS={waiting:['Ждёт ответа','b-attn'],open:['Открыта всем','b-attn'],taken:['Взята','b-done'],nottaken:['Не взята','b-err']};
 
+/* ================= НАСТРОЙКИ МАРШРУТОВ (админ) =================
+   Та же структура, что будет в базе бота: section_routing (раздел → менеджер, режим),
+   managers (принимает заявки, замена, Telegram), routing_settings (T1, часы).
+   Бот читает их при каждой новой заявке. В демо хранится в браузере (localStorage).
+   История (диалоги и заявки за 7 дней) не пересчитывается: заявка уходит по правилам на момент создания. */
+const MODES={ai:'ИИ консультирует',manager:'Сразу менеджеру',off:'Не показывать'};
+const CFG_KEY='pult47.routing.v1', LOG_KEY='pult47.routing.log.v1';
+function defaultCfg(){return {T1:T1_DEFAULT, hours:{wd:[9.5,18],sat:[10,17],sun:null},
+  sec:Object.fromEntries(SECTIONS.map(s=>[s.c,{m:s.m,mode:s.h?'manager':'ai'}])),
+  mgr:Object.fromEntries(MANAGERS.map(m=>[m.id,{on:true,sub:null,tg:''}]))}}
+const clone=o=>JSON.parse(JSON.stringify(o));
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+function loadCfg(){
+  const d=defaultCfg(), s=store(CFG_KEY); if(!s) return d;
+  if(typeof s.T1==='number') d.T1=s.T1;
+  if(s.hours&&Array.isArray(s.hours.wd)) d.hours=s.hours;
+  for(const c in d.sec){const x=s.sec&&s.sec[c]; if(x){ if(x.m===null||MID[x.m]) d.sec[c].m=x.m; if(MODES[x.mode]) d.sec[c].mode=x.mode; }}
+  for(const id in d.mgr){const x=s.mgr&&s.mgr[id]; if(x) d.mgr[id]={on:x.on!==false, sub:MID[x.sub]?x.sub:null, tg:String(x.tg||'')}}
+  return d;
+}
+let CFG=loadCfg();
+let CFG_LOG=store(LOG_KEY)||[]; if(!Array.isArray(CFG_LOG)) CFG_LOG=[];
+const hoursOf=cfg=>({1:cfg.hours.wd,2:cfg.hours.wd,3:cfg.hours.wd,4:cfg.hours.wd,5:cfg.hours.wd,6:cfg.hours.sat,0:cfg.hours.sun});
+const fmtH=x=>`${Math.floor(x)}:${x%1?'30':'00'}`;
+const fmtRange=r=>r?`${fmtH(r[0])}-${fmtH(r[1])}`:'выходной';
+function hoursStr(h){return `пн-пт ${fmtRange(h.wd)}, сб ${fmtRange(h.sat)}${h.sun?`, вс ${fmtRange(h.sun)}`:''}`}
+// кому уйдёт новая заявка из раздела: закреплённый, а если он не принимает заявки, его замена
+function routeFor(c,cfg=CFG){
+  const sc=cfg.sec[c]||{m:null,mode:'ai'}; let m=sc.m, subFor=null;
+  if(m&&cfg.mgr[m]&&!cfg.mgr[m].on){subFor=m; const s=cfg.mgr[m].sub; m=(s&&cfg.mgr[s]&&cfg.mgr[s].on)?s:null}
+  return {m,subFor,mode:sc.mode};
+}
+const poolOf=cfg=>MANAGERS.filter(m=>m.id!=='zhul'&&cfg.mgr[m.id].on);
+const mgrName=id=>id?MID[id].short:'не закреплён';
+function cfgChanges(a,b){
+  const out=[];
+  for(const s of SECTIONS){const x=a.sec[s.c],y=b.sec[s.c];
+    if(x.m!==y.m) out.push(`${secShort(s.c)}: ${mgrName(x.m)} → ${mgrName(y.m)}`);
+    if(x.mode!==y.mode) out.push(`${secShort(s.c)}: ${MODES[x.mode].toLowerCase()} → ${MODES[y.mode].toLowerCase()}`)}
+  for(const m of MANAGERS){const x=a.mgr[m.id],y=b.mgr[m.id];
+    if(x.on!==y.on) out.push(`${m.short}: ${y.on?'снова принимает заявки':'не принимает заявки'}`);
+    if(x.sub!==y.sub) out.push(`${m.short}: замена ${y.sub?MID[y.sub].short:'не назначена'}`);
+    if(x.tg!==y.tg) out.push(`${m.short}: Telegram ${y.tg||'не указан'}`)}
+  if(a.T1!==b.T1) out.push(`T1: ${a.T1} → ${b.T1} мин`);
+  if(JSON.stringify(a.hours)!==JSON.stringify(b.hours)) out.push(`Рабочие часы: ${hoursStr(b.hours)}`);
+  return out;
+}
+
 /* ================= СОСТОЯНИЕ ================= */
 const S={route:'dialogs', dId:DIALOGS[0].id, fStatus:'all', fSec:'all', fMgr:'all', q:'', mobile:'list',
-  lId:LEADS[0]?.no, lFilter:'all', lTab:'tg', aTab:'overview', rTab:'managers'};
+  lId:LEADS[0]?.no, lFilter:'all', lTab:'tg', aTab:'overview', rTab:'sections',
+  draft:null, picked:new Set(), rq:'', rf:'all', saved:null};
+const draft=()=>S.draft||(S.draft=clone(CFG));
 
 /* ================= ОБЩИЕ КУСКИ ================= */
 const $main=document.getElementById('main');
@@ -729,7 +839,7 @@ function renderInfo(d){
   const s=SEC[d.sec], L=d.lead;
   let h=`<section class="panel info" aria-label="Карточка диалога"><dl class="kv">
     <dt>Раздел</dt><dd>${esc(secShort(d.sec))}</dd>
-    <dt>Менеджер</dt><dd>${s&&s.m?MID[s.m].short:'<span class="badge b-attn">не закреплён</span>'}</dd>
+    <dt>Менеджер</dt><dd>${d.mgr?MID[d.mgr].short:'<span class="badge b-attn">не закреплён</span>'}</dd>
     <dt>Страница</dt><dd>${esc(d.page)}</dd>
     <dt>Начат</dt><dd>${when(d.at)}</dd></dl>`;
   if(L) h+=`<div class="sect"><div class="sect-h"><b>Заявка №${L.no}</b>${leadBadge(L)}</div>
@@ -747,7 +857,7 @@ function tgLeadText(L){
 <b>Запрос:</b> ${esc(L.request)}${L.calc?`
 <b>Расчёт:</b> ${esc(L.calc)}`:''}${L.stock?`
 <b>Наличие:</b> ${esc(L.stock)}`:''}
-${as?`<b>Закреплена:</b> ${as.short}${L.deadline?` · до ${hm(L.deadline)}`:''}`:'<b>Закреплена:</b> нет, открыта всем'}`;
+${as?`<b>Закреплена:</b> ${as.short}${L.subFor?` (вместо ${MID[L.subFor].short})`:''}${L.deadline?` · до ${hm(L.deadline)}`:''}`:'<b>Закреплена:</b> нет, открыта всем'}`;
 }
 function renderTG(L, upTo=Infinity, framed=true){
   const head=`<div class="tg-h"><div class="tg-av">4-7</div><div><b>Заявки 4-7.ru</b><span>группа · бот и менеджеры</span></div></div>`;
@@ -762,7 +872,7 @@ function renderTG(L, upTo=Infinity, framed=true){
    <div class="tg-kb"><span class="${taken?'off':''}">${taken?'Взята':'Беру'}</span><span>Диалог</span></div>
    <div class="tm">${taken?'<span class="tg-edit">изменено · </span>':''}${hm(L.createdAt)}</div></div>`;
   for(const e of ev){
-    if(e.k==='offhours') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">Нерабочее время. Клиенту обещан звонок после ${hm(nextWorkStart(L.createdAt))}.</div><div class="tm">${hm(e.t)}</div></div>`;
+    if(e.k==='offhours') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">Нерабочее время. Клиенту обещан звонок после ${hm(nextWorkStart(L.createdAt,L.H||HOURS))}.</div><div class="tm">${hm(e.t)}</div></div>`;
     if(e.k==='open') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">${as?esc(as.short)+' не ответила за '+minsBetween(L.createdAt,e.t)+' мин. ':''}Заявка №${L.no} открыта всем.</div>${taken?'':'<div class="tg-kb"><span>Беру</span><span>Диалог</span></div>'}<div class="tm">${hm(e.t)}</div></div>`;
     if(e.k==='taken') b+=`<div class="tg-svc pop">${esc(MID[L.takenBy].short)} взяла заявку · ${hm(e.t)}</div>`;
     if(e.k==='nottaken') b+=`<div class="tg-msg pop"><div class="nm">ИИ-менеджер 4-7</div><div class="tx">Заявка №${L.no} не взята.</div><div class="tm">${hm(e.t)}</div></div>`;
@@ -795,27 +905,32 @@ function renderLeads(){
 }
 
 /* ================= ТЕСТ МАРШРУТА ================= */
-const SIM={sec:'Природный камень Плитняки', time:'work', beh:'assigned', T1:15, step:-1, L:null, timer:null};
+const SIM={sec:'Природный камень Плитняки', time:'work', beh:'assigned', T1:CFG.T1, step:-1, L:null, timer:null};
+const T1_OPTS=[5,10,15,20,30,45,60];
 const SIM_TIMES={work:{label:'Будни 11:40',d:new Date(2026,10,12,11,40)},late:{label:'Будни 20:15',d:new Date(2026,10,12,20,15)},sat:{label:'Сб 18:30',d:new Date(2026,10,14,18,30)},sun:{label:'Вс 13:00',d:new Date(2026,10,15,13,0)}};
 function simBuild(){
   const save=R; R=rng(99);
   const start=SIM_TIMES[SIM.time].d;
-  const L={no:1100,createdAt:start,sec:SIM.sec,assigned:SEC[SIM.sec].m,client:'Тестовый клиент',phone:'+7 900 •••-00-00',request:'тестовая заявка',calc:'Плитняк «Нубиец» 30-40 мм, 1,5 т (≈20 м²), 28 200 ₽',stock:'есть',reason:SEC[SIM.sec].h?'section':'cta',page:secShort(SIM.sec)};
-  Object.assign(L, buildRoute(L,SIM.beh,SIM.T1,addMin(start,3*1440)));
+  const rt=routeFor(SIM.sec);
+  const L={no:1100,createdAt:start,sec:SIM.sec,assigned:rt.mode==='off'?null:rt.m,subFor:rt.mode==='off'?null:rt.subFor,mode:rt.mode,client:'Тестовый клиент',phone:'+7 900 •••-00-00',request:'тестовая заявка',calc:'Плитняк «Нубиец» 30-40 мм, 1,5 т (≈20 м²), 28 200 ₽',stock:'есть',reason:rt.mode==='manager'?'section':'cta',page:secShort(SIM.sec)};
+  L.H=hoursOf(CFG);
+  Object.assign(L, buildRoute(L,SIM.beh,SIM.T1,addMin(start,3*1440),{H:L.H,pool:poolOf(CFG)}));
   R=save; SIM.L=L;
 }
 function renderSim(){
   if(!SIM.L) simBuild();
-  const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)], s=SEC[SIM.sec], done=SIM.step>=L.events.length-1;
+  const L=SIM.L, cur=SIM.step<0?null:L.events[Math.min(SIM.step,L.events.length-1)], rt=routeFor(SIM.sec), done=SIM.step>=L.events.length-1;
+  const who=rt.mode==='off'?'Раздел скрыт у бота':rt.m?`Закреплён: ${MID[rt.m].short}${rt.subFor?` вместо ${sur(rt.subFor)}`:''}`:rt.subFor?`${sur(rt.subFor)} не принимает, замены нет, сразу всем`:'Без менеджера, сразу всем';
+  const dirty=S.draft&&cfgChanges(CFG,S.draft).length;
   let h=pageTop('Тест маршрута');
   h+=`<section class="panel"><form class="tb" id="simForm">
     <div class="field"><label for="simSec">Раздел</label><select id="simSec">${SECTIONS.map(x=>`<option value="${esc(x.c)}">${esc(secShort(x.c))}</option>`).join('')}</select>
-      <span class="hint">${s.m?'Закреплён: '+MID[s.m].short:'Без менеджера, сразу всем'}${s.h?' · ИИ не консультирует':''}</span></div>
-    <div class="field"><span class="lbl">Обращение</span>${segHtml('simtime',Object.entries(SIM_TIMES).map(([k,v])=>[k,v.label]),SIM.time)}<span class="hint">${isWork(SIM_TIMES[SIM.time].d)?'рабочее время':'нерабочее время'}</span></div>
+      <span class="hint">${who}${rt.mode==='manager'?' · ИИ не консультирует':''}</span></div>
+    <div class="field"><span class="lbl">Обращение</span>${segHtml('simtime',Object.entries(SIM_TIMES).map(([k,v])=>[k,v.label]),SIM.time)}<span class="hint">${isWork(SIM_TIMES[SIM.time].d,hoursOf(CFG))?'рабочее время':'нерабочее время'}</span></div>
     <div class="field"><span class="lbl">Менеджеры</span>${segHtml('simbeh',[['assigned','Берёт закреплённый'],['colleague','Берёт коллега'],['nobody','Никто']],SIM.beh)}</div>
-    <div class="field"><label for="simT1">T1</label><select id="simT1">${[5,10,15,20,30].map(v=>`<option value="${v}" ${SIM.T1===v?'selected':''}>${v} мин</option>`).join('')}</select></div>
+    <div class="field"><label for="simT1">T1</label><select id="simT1">${T1_OPTS.map(v=>`<option value="${v}" ${SIM.T1===v?'selected':''}>${v} мин</option>`).join('')}</select></div>
     <div class="actions"><button type="submit" class="btn primary">Запустить</button><button type="button" class="btn" data-simall>Сразу итог</button></div>
-  </form></section>
+  </form>${dirty?`<div class="note">В настройках есть несохранённые изменения (${dirty}). Тест идёт по сохранённым правилам. <button class="link" data-route="routing">Открыть настройки</button></div>`:''}</section>
   <div class="sim2"><section class="panel"><div class="panel-h"><h2>Ход заявки</h2>${cur?`<span class="badge ${done?LSTATUS[L.status][1]:'b-attn'}">${done?LSTATUS[L.status][0]:'идёт'}</span>`:''}</div>
     <div class="pb sim-body"><div><div class="clock num">${cur?hm(cur.t):hm(L.createdAt)}</div><div class="small muted">${dayLabel(L.createdAt)}</div></div>
     ${SIM.step<0?'<div class="small muted">Нажмите «Запустить».</div>':renderTimeline(L.events,SIM.step)}</div></section>
@@ -890,9 +1005,18 @@ function topSections(){
 
 /* ================= НАСТРОЙКИ ================= */
 const ROOTS=[['Фонтаны и МАФЫ','Фонтаны и МАФы'],['Камень для мощения','Камень для мощения'],['Природный камень','Природный камень'],['Материалы для ЛД','Материалы для ЛД'],['Облицовочная плитка','Облицовочная плитка']];
+// раздел → [группа, короткое имя]: без повторов слов, строчные буквы, названия в «» как есть
+function splitSec(c){
+  const r=ROOTS.find(([p])=>c.startsWith(p))||[c,c]; const raw=c.slice(r[0].length).trim()||r[1];
+  let leaf=raw.split(' ').filter((w,i,a)=>!i||w.toLowerCase()!==a[i-1].toLowerCase()).join(' ').replace(/(^|[\s-])([А-ЯЁ])(?=[а-яё])/g,(m,sp,ch)=>sp+ch.toLowerCase());
+  const q=raw.match(/«[^»]*»/); if(q) leaf=leaf.replace(/«[^»]*»/,q[0]);
+  return [r[1],leaf];
+}
+const plural=(n,a,b,c)=>{const m=n%100,k=n%10;return m>10&&m<20?c:k===1?a:k>1&&k<5?b:c};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 function groupSecs(arr){
   const g={};
-  for(const s of arr){const r=ROOTS.find(([p])=>s.c.startsWith(p))||[s.c,s.c];let leaf=s.c.slice(r[0].length).trim()||r[1];leaf=leaf.split(' ').filter((w,i,a)=>!i||w.toLowerCase()!==a[i-1].toLowerCase()).join(' ').replace(/(^|\s)([А-ЯЁ])(?=[а-яё])/g,(m,sp,c)=>sp+c.toLowerCase());(g[r[1]]=g[r[1]]||[]).push(leaf)}
+  for(const s of arr){const [k,leaf]=splitSec(s.c);(g[k]=g[k]||[]).push(leaf)}
   return `<dl class="grp">${Object.entries(g).map(([k,v])=>`<dt>${k} <span class="muted">${v.length}</span></dt><dd>${esc(v.join(', '))}</dd>`).join('')}</dl>`;
 }
 const QUESTIONS=[
@@ -904,46 +1028,124 @@ const QUESTIONS=[
   ['Менеджеры для разделов без закрепления','11 разделов на сайте без менеджера, заявки из них идут сразу всем.'],
   ['Персональные данные','Имя и телефон хранятся только в заявке в Telegram, в базе бота не сохраняются. В форму добавляем согласие на обработку.'],
 ];
+const HOPTS=Array.from({length:31},(_,i)=>7+i/2);
+const secChanged=c=>S.draft&&JSON.stringify(CFG.sec[c])!==JSON.stringify(S.draft.sec[c]);
+const mgrChanged=id=>S.draft&&JSON.stringify(CFG.mgr[id])!==JSON.stringify(S.draft.mgr[id]);
+function routingRows(D){
+  const q=S.rq.trim().toLowerCase();
+  return SECTIONS.filter(s=>{const x=D.sec[s.c];
+    if(S.rf==='none'&&x.m) return false;
+    if(S.rf==='manager'&&x.mode!=='manager') return false;
+    if(S.rf==='chg'&&!secChanged(s.c)) return false;
+    if(q&&!s.c.toLowerCase().includes(q)) return false;
+    return true});
+}
+function mgrOpts(D,cur,emptyLabel){
+  return `<option value="">${emptyLabel}</option>${MANAGERS.map(m=>`<option value="${m.id}" ${cur===m.id?'selected':''}>${m.short}${D.mgr[m.id].on?'':' (не принимает)'}</option>`).join('')}`;
+}
+function saveBar(ch){
+  if(ch.length) return `<div class="savebar" role="region" aria-label="Несохранённые изменения"><div class="grow"><b>Не сохранено: ${ch.length}</b> <span class="muted">${esc(ch.slice(0,2).join('; '))}${ch.length>2?` и ещё ${ch.length-2}`:''}</span></div>
+    <div class="sb-a"><button class="btn" data-cancelcfg>Отменить</button><button class="btn primary" data-savecfg>Сохранить</button></div></div>`;
+  if(S.saved) return `<div class="savebar ok" role="status"><div class="grow"><b>Сохранено.</b> <span class="muted">Новые заявки пойдут по новым правилам, уже созданные остаются как были.</span></div>
+    <div class="sb-a"><button class="btn" data-route="route-test">Проверить в тесте маршрута</button><button class="btn ghost" data-closesaved>Закрыть</button></div></div>`;
+  return '';
+}
 function renderRouting(){
-  const none=SECTIONS.filter(s=>!s.m), hand=SECTIONS.filter(s=>s.h);
-  let h=pageTop('Настройки')+tabsHtml('rTab',[['managers','Менеджеры'],['rules','Правила передачи'],['sections','Разделы'],['questions','Вопросы к клиенту',QUESTIONS.length]]);
-  if(S.rTab==='managers'){
-    h+=`<section class="panel">${MANAGERS.map(m=>{const ss=SECTIONS.filter(s=>s.m===m.id);return `<div class="mgr"><span class="av">${m.ini}</span><div class="mgr-b"><b>${m.name}</b>
-      <details><summary>${ss.length} разделов · ${ss.reduce((a,s)=>a+s.n,0)} товаров</summary>${groupSecs(ss)}</details></div><span class="badge b-attn">TG уточнить</span></div>`}).join('')}
-     <div class="mgr"><span class="av q">?</span><div class="mgr-b"><b>Пятый менеджер</b><span class="small muted">на сайте не найден</span></div><span class="badge b-attn">уточнить</span></div></section>`;
+  const D=draft(), ch=cfgChanges(CFG,D);
+  let h=pageTop('Настройки')+tabsHtml('rTab',[['sections','Маршрутизация'],['managers','Менеджеры'],['rules','Правила передачи'],['questions','Вопросы к клиенту',QUESTIONS.length]]);
+  if(S.rTab==='sections'){
+    const rows=routingRows(D), cnt=f=>SECTIONS.filter(f).length;
+    const groups={}; for(const s of rows){const [g,leaf]=splitSec(s.c);(groups[g]=groups[g]||[]).push([s,cap(leaf)])}
+    const gList=Object.entries(groups);
+    h+=`<section class="panel rt"><div class="rt-tools"><input id="rq" type="search" placeholder="Найти раздел" value="${esc(S.rq)}" aria-label="Найти раздел">
+      ${segHtml('rf',[['all','Все',SECTIONS.length],['none','Без менеджера',cnt(s=>!D.sec[s.c].m)],['manager','Сразу менеджеру',cnt(s=>D.sec[s.c].mode==='manager')],['chg','Изменено',cnt(s=>secChanged(s.c))]],S.rf)}</div>`;
+    if(S.picked.size) h+=`<div class="rt-bulk"><b>Выбрано: ${S.picked.size}</b>
+      <select id="bulkM" aria-label="Назначить менеджера выбранным разделам"><option value="-">Назначить менеджера</option>${MANAGERS.map(m=>`<option value="${m.id}">${m.short}</option>`).join('')}<option value="">Не закреплён, сразу всем</option></select>
+      <select id="bulkMode" aria-label="Режим ИИ для выбранных разделов"><option value="-">Как работает ИИ</option>${Object.entries(MODES).map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select>
+      <button class="btn ghost" data-unpick>Снять выбор</button></div>`;
+    h+=`<div class="rt-row rt-head" aria-hidden="true"><span></span><span>Раздел</span><span>Менеджер</span><span>Как работает ИИ</span></div>`;
+    h+= gList.length? gList.map(([g,arr],gi)=>{
+      const all=arr.every(([s])=>S.picked.has(SECTIONS.indexOf(s)));
+      return `<div class="rt-g"><input type="checkbox" id="rg-${gi}" data-pickgrp="${esc(g)}" ${all?'checked':''} aria-label="Выбрать все разделы группы ${esc(g)}"><label for="rg-${gi}">${esc(g)}</label><span class="muted">${arr.length}</span></div>`+
+      arr.map(([s,leaf])=>{const i=SECTIONS.indexOf(s), x=D.sec[s.c];
+        return `<div class="rt-row${secChanged(s.c)?' chg':''}"><input type="checkbox" id="rp-${i}" data-pick="${i}" ${S.picked.has(i)?'checked':''} aria-label="Выбрать: ${esc(leaf)}">
+          <label class="rt-name" for="rp-${i}"><b>${esc(leaf)}</b><span>${s.n} тов.</span></label>
+          <select id="rm-${i}" class="s1${x.m?'':' warn'}" aria-label="Менеджер: ${esc(leaf)}">${mgrOpts(D,x.m,'Не закреплён, сразу всем')}</select>
+          <select id="rmo-${i}" class="s2" aria-label="Как работает ИИ: ${esc(leaf)}">${Object.entries(MODES).map(([k,t])=>`<option value="${k}" ${x.mode===k?'selected':''}>${t}</option>`).join('')}</select></div>`}).join('')}).join('')
+      : '<div class="empty">Ничего не найдено</div>';
+    h+=`<div class="note">Бот читает эти настройки при каждой новой заявке. В демо они хранятся только в этом браузере. <button class="link" data-resetcfg>Вернуть как на сайте</button></div></section>`;
+    if(CFG_LOG.length) h+=`<details class="panel log"><summary>Журнал изменений <span class="cnt-s">${CFG_LOG.length}</span></summary><ol>${CFG_LOG.slice().reverse().map(e=>{const d=new Date(e.at);return `<li><span class="muted small">${d.getDate()} ${MON[d.getMonth()]}, ${hm(d)} · администратор</span>${e.ch.map(x=>`<div>${esc(x)}</div>`).join('')}</li>`}).join('')}</ol></details>`;
+  } else if(S.rTab==='managers'){
+    h+=`<section class="panel mgrs">${MANAGERS.map(m=>{const x=D.mgr[m.id], ss=SECTIONS.filter(s=>D.sec[s.c].m===m.id);
+      return `<div class="mgr mgr2${mgrChanged(m.id)?' chg':''}"><span class="av">${m.ini}</span><div class="mgr-b"><b>${m.name}</b>
+        <details><summary>${ss.length} ${plural(ss.length,'раздел','раздела','разделов')} · ${ss.reduce((a,s)=>a+s.n,0)} ${plural(ss.reduce((a,s)=>a+s.n,0),'товар','товара','товаров')}</summary>${ss.length?groupSecs(ss):'<div class="small muted">нет закреплённых разделов</div>'}</details></div>
+        <div class="mgr-c"><input id="mtg-${m.id}" type="text" placeholder="@telegram" value="${esc(x.tg)}" aria-label="Telegram: ${m.short}" autocomplete="off" spellcheck="false">
+          <label class="sw"><input type="checkbox" role="switch" id="mon-${m.id}" ${x.on?'checked':''}>Принимает заявки</label>
+          ${x.on?'':`<select id="msub-${m.id}" aria-label="Кто получает заявки вместо: ${m.short}"><option value="">Замена: нет, сразу всем</option>${MANAGERS.filter(o=>o.id!==m.id).map(o=>`<option value="${o.id}" ${x.sub===o.id?'selected':''}>Замена: ${o.short}</option>`).join('')}</select>`}</div></div>`}).join('')}
+      <div class="mgr"><span class="av q">?</span><div class="mgr-b"><b>Пятый менеджер</b><span class="small muted">на сайте не найден, добавим после ответа Андрея</span></div><span></span></div></section>`;
   } else if(S.rTab==='rules'){
+    const hsel=(id,v,lbl)=>`<select id="${id}" aria-label="${lbl}">${HOPTS.map(o=>`<option value="${o}" ${o===v?'selected':''}>${fmtH(o)}</option>`).join('')}</select>`;
+    const hrow=(k,lbl)=>{const r=D.hours[k];return `<div class="hrow"><span class="hl">${lbl}</span>${r?`${hsel('h-'+k+'-0',r[0],lbl+', начало')}<span class="muted">до</span>${hsel('h-'+k+'-1',r[1],lbl+', конец')}`:'<span class="hoff" aria-hidden="true"></span>'}${k==='wd'?'':`<label class="ck"><input type="checkbox" id="hoff-${k}" ${r?'':'checked'}>выходной</label>`}</div>`};
     h+=`<div class="params">
-     <div class="param"><span class="metric">T1, ответ закреплённого</span><span class="v">${T1_DEFAULT} мин</span><span class="badge b-attn">уточнить</span></div>
-     <div class="param"><span class="metric">Рабочие часы</span><span class="v">${hoursText}</span><span class="badge b-attn">уточнить</span></div>
-     <div class="param"><span class="metric">Лимит объёма по группам</span><span class="v">не задан</span><span class="badge b-attn">уточнить</span></div>
-     <div class="param"><span class="metric">Анти-прощупывание</span><span class="v">+20% за сессию</span><span class="badge b-done">согласовано</span></div></div>
+     <div class="param"><label class="metric" for="cfgT1">T1, ответ закреплённого</label><select id="cfgT1">${T1_OPTS.map(v=>`<option value="${v}" ${D.T1===v?'selected':''}>${v} мин</option>`).join('')}</select><span class="s">первые минуты заявку может взять только закреплённый</span></div>
+     <div class="param span2"><span class="metric">Рабочие часы</span>${hrow('wd','пн-пт')}${hrow('sat','сб')}${hrow('sun','вс')}</div>
+     <div class="param"><span class="metric">Защита остатков</span><div class="pline"><span>Повтор +20% за сессию</span><span class="badge b-done">согласовано</span></div><div class="pline"><span>Лимит объёма по группам</span><span class="badge b-attn">уточнить</span></div></div></div>
      <section class="panel"><div class="tbl-wrap"><table class="rules"><thead><tr><th>Ситуация</th><th>Рабочее время</th><th>Нерабочее</th></tr></thead><tbody>
       <tr class="static"><td>Клиент оставил имя и телефон</td><td>закреплённому, через T1 всем</td><td>пометка «ждёт менеджера»</td></tr>
-      <tr class="static"><td>Раздел «сразу на менеджера»</td><td>соединить с менеджером</td><td>собрать контакт</td></tr>
+      <tr class="static"><td>Раздел «сразу менеджеру»</td><td>соединить с менеджером</td><td>собрать контакт</td></tr>
+      <tr class="static"><td>Менеджер не принимает заявки</td><td colspan="2">заявки его разделов получает замена, без замены сразу всем</td></tr>
       <tr class="static"><td>Товар под заказ</td><td>соединить с менеджером</td><td>собрать контакт</td></tr>
       <tr class="static"><td>Не хватает остатка</td><td colspan="2">до 20% «чуть не хватает», больше «не хватает», предложить менеджера</td></tr>
       <tr class="static"><td>Крупный объём или повтор +20%</td><td colspan="2">к менеджеру, отказ дать контакт в журнал</td></tr>
       <tr class="static"><td>Точный остаток</td><td colspan="2">не называется, только «есть / чуть не хватает / нет»</td></tr>
-     </tbody></table></div></section>`;
-  } else if(S.rTab==='sections'){
-    h+=`<div class="cols2"><section class="panel"><div class="panel-h"><h2>Без менеджера</h2><span class="badge b-attn">${none.length}</span></div>${groupSecs(none)}</section>
-     <section class="panel"><div class="panel-h"><h2>Сразу на менеджера</h2><span class="badge b-info">${hand.length}</span></div>${groupSecs(hand)}
-      <div class="note">Без товаров в каталоге, но тоже на менеджера: брусчатка оптом, товары со скидкой, бетонная плитка, габионы.</div></section></div>`;
+     </tbody></table></div><div class="note">Без товаров в каталоге, но тоже на менеджера: брусчатка оптом, товары со скидкой, бетонная плитка, габионы.</div></section>`;
   } else {
     h+=`<section class="panel"><ol class="qs">${QUESTIONS.map(([t,x])=>`<li><details><summary><b>${t}</b></summary><p>${x}</p></details></li>`).join('')}</ol></section>`;
   }
-  $main.innerHTML=h;
+  $main.innerHTML=h+(S.rTab==='questions'?'':saveBar(ch));
+}
+function cfgTouched(){S.saved=null;render()}
+function saveCfg(){
+  const D=draft(), ch=cfgChanges(CFG,D); if(!ch.length) return;
+  const sec=SECTIONS.find(s=>JSON.stringify(CFG.sec[s.c])!==JSON.stringify(D.sec[s.c]));
+  const mg=MANAGERS.find(m=>JSON.stringify(CFG.mgr[m.id])!==JSON.stringify(D.mgr[m.id]));
+  CFG=clone(D); S.draft=null; S.picked.clear(); store(CFG_KEY,CFG);
+  CFG_LOG.push({at:Date.now(),ch}); CFG_LOG=CFG_LOG.slice(-50); store(LOG_KEY,CFG_LOG);
+  // тест маршрута сразу показывает изменённый раздел
+  const target=sec?sec.c:mg?(SECTIONS.find(s=>CFG.sec[s.c].m===mg.id)||{}).c:null;
+  if(target) SIM.sec=target;
+  SIM.T1=CFG.T1; simReset(); S.saved=true; render();
+}
+function onCfgChange(t){
+  const id=t.id||'', D=draft();
+  let m;
+  if((m=id.match(/^rm-(\d+)$/))){D.sec[SECTIONS[+m[1]].c].m=t.value||null}
+  else if((m=id.match(/^rmo-(\d+)$/))){D.sec[SECTIONS[+m[1]].c].mode=t.value}
+  else if((m=id.match(/^rp-(\d+)$/))){const i=+m[1]; t.checked?S.picked.add(i):S.picked.delete(i)}
+  else if(t.dataset.pickgrp!=null){const g=t.dataset.pickgrp; for(const s of routingRows(D)) if(splitSec(s.c)[0]===g){const i=SECTIONS.indexOf(s); t.checked?S.picked.add(i):S.picked.delete(i)}}
+  else if(id==='bulkM'){if(t.value==='-')return true; for(const i of S.picked) D.sec[SECTIONS[i].c].m=t.value||null}
+  else if(id==='bulkMode'){if(t.value==='-')return true; for(const i of S.picked) D.sec[SECTIONS[i].c].mode=t.value}
+  else if((m=id.match(/^mon-(\w+)$/))){D.mgr[m[1]].on=t.checked}
+  else if((m=id.match(/^msub-(\w+)$/))){D.mgr[m[1]].sub=t.value||null}
+  else if((m=id.match(/^mtg-(\w+)$/))){let v=t.value.trim().replace(/^https?:\/\/t\.me\//,''); if(v&&!v.startsWith('@')) v='@'+v; D.mgr[m[1]].tg=v}
+  else if(id==='cfgT1'){D.T1=+t.value}
+  else if((m=id.match(/^h-(wd|sat|sun)-([01])$/))){const r=D.hours[m[1]]; r[+m[2]]=+t.value; if(r[0]>=r[1]){ if(+m[2]===0) r[1]=Math.min(22,r[0]+1); else r[0]=Math.max(7,r[1]-1);} }
+  else if((m=id.match(/^hoff-(sat|sun)$/))){D.hours[m[1]]=t.checked?null:(m[1]==='sat'?[10,17]:[10,16])}
+  else return false;
+  cfgTouched(); return true;
 }
 
 /* ================= РОУТИНГ И СОБЫТИЯ ================= */
 const ROUTES={dialogs:renderDialogs,leads:renderLeads,'route-test':renderSim,analytics:renderAnalytics,routing:renderRouting};
 function render(){
+  const fid=document.activeElement&&document.activeElement.id; // фокус переживает перерисовку
   (ROUTES[S.route]||renderDialogs)();
+  if(fid&&fid!=='q'){const el=document.getElementById(fid); if(el&&el!==document.activeElement) el.focus({preventScroll:true})}
   document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.route===S.route?'page':'false'));
   const q=LEADS.filter(l=>l.status!=='taken').length; const c=document.getElementById('navCnt'); c.hidden=!q; c.textContent=q;
 }
 function go(r){ if(location.hash.slice(1)!==r) location.hash=r; else {S.route=r;render()} }
-window.addEventListener('hashchange',()=>{const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';clearInterval(SIM.timer);render();window.scrollTo(0,0)});
+window.addEventListener('hashchange',()=>{const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';S.saved=null;clearInterval(SIM.timer);render();window.scrollTo(0,0)});
 document.addEventListener('click',e=>{
   const t=e.target.closest('button,tr,[data-openlead]'); if(!t) return;
   const ds=t.dataset;
@@ -959,14 +1161,23 @@ document.addEventListener('click',e=>{
   if(ds.simtime){SIM.time=ds.simtime;simReset();render();return}
   if(ds.simbeh){SIM.beh=ds.simbeh;simReset();render();return}
   if(t.hasAttribute('data-simall')){simRun(true);return}
+  if(ds.rf){S.rf=ds.rf;render();return}
+  if(t.hasAttribute('data-savecfg')){saveCfg();return}
+  if(t.hasAttribute('data-cancelcfg')){S.draft=null;S.picked.clear();render();return}
+  if(t.hasAttribute('data-closesaved')){S.saved=null;render();return}
+  if(t.hasAttribute('data-unpick')){S.picked.clear();render();return}
+  if(t.hasAttribute('data-resetcfg')){if(confirm('Вернуть закрепление и правила как на сайте? Изменения нужно будет сохранить.')){S.draft=defaultCfg();if(cfgChanges(CFG,S.draft).length)S.rf='chg';cfgTouched()}return}
 });
 document.addEventListener('change',e=>{
   const id=e.target.id;
   if(id==='fSec'){S.fSec=e.target.value;render()} else if(id==='fMgr'){S.fMgr=e.target.value;render()}
   else if(id==='simSec'){SIM.sec=e.target.value;simReset();render()}
   else if(id==='simT1'){SIM.T1=+e.target.value;simReset();render()}
+  else if(S.route==='routing') onCfgChange(e.target);
 });
 let qTimer;
+let rqTimer;
+document.addEventListener('input',e=>{if(e.target.id==='rq'){clearTimeout(rqTimer);const v=e.target.value;rqTimer=setTimeout(()=>{S.rq=v;render();const el=document.getElementById('rq');if(el){el.focus();el.setSelectionRange(v.length,v.length)}},200)}});
 document.addEventListener('input',e=>{if(e.target.id==='q'){clearTimeout(qTimer);const v=e.target.value;qTimer=setTimeout(()=>{S.q=v;render();const el=document.getElementById('q');if(el){el.focus();el.setSelectionRange(v.length,v.length)}},250)}});
 document.addEventListener('submit',e=>{if(e.target.id==='simForm'){e.preventDefault();simRun(false)}});
 (function init(){const r=location.hash.slice(1);S.route=ROUTES[r]?r:'dialogs';render()})();
